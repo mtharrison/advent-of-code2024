@@ -29,12 +29,25 @@ fn get_distance(mut lhs: Vec<i32>, mut rhs: Vec<i32>) -> i32 {
     distance
 }
 
-fn main() {
-    let input = std::fs::read_to_string("bin/day1/puzzle.txt").expect("Failed to read input file");
-    let (lhs, rhs) = parse_input(&input);
-    let distance = get_distance(lhs, rhs);
-    println!("Distance: {}", distance);
+fn get_similarity(lhs: Vec<i32>, rhs: Vec<i32>) -> i32 {
+    let mut similarity = 0;
+
+    for num in lhs {
+        // count how many times num appears in rhs
+        let count: i32 = rhs
+            .iter()
+            .filter(|&x| *x == num)
+            .count()
+            .try_into()
+            .unwrap();
+
+        similarity += count * num;
+    }
+
+    similarity
 }
+
+fn main() {}
 
 #[cfg(test)]
 mod tests {
@@ -47,5 +60,23 @@ mod tests {
         let (lhs, rhs) = parse_input(&input);
         let distance = get_distance(lhs, rhs);
         assert_eq!(distance, 11);
+    }
+
+    #[test]
+    fn test_part_1() {
+        let input =
+            std::fs::read_to_string("bin/day1/puzzle.txt").expect("Failed to read input file");
+        let (lhs, rhs) = parse_input(&input);
+        let distance = get_distance(lhs, rhs);
+        println!("Distance: {}", distance);
+    }
+
+    #[test]
+    fn test_part_2() {
+        let input =
+            std::fs::read_to_string("bin/day1/puzzle.txt").expect("Failed to read input file");
+        let (lhs, rhs) = parse_input(&input);
+        let similarity = get_similarity(lhs, rhs);
+        println!("Similarity: {}", similarity);
     }
 }
