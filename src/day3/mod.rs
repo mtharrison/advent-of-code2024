@@ -93,41 +93,33 @@ pub fn scan_program(input: String) -> Vec<Instruction> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::util::load_file;
+    use crate::util::parse;
 
     #[test]
     fn test_example_part1() {
-        let input = load_file("day3", "example.txt");
-        let instrs = scan_program(input);
-        let mut machine = Machine::new(false);
-        let result = machine.run_program(instrs);
+        let instrs = parse("day3", "example.txt", scan_program);
+        let result = Machine::new(false).run_program(instrs);
         assert_eq!(result, 161);
     }
 
     #[test]
     fn test_part1() {
-        let input = load_file("day3", "puzzle.txt");
-        let instrs = scan_program(input);
-        let mut machine = Machine::new(false);
-        let result = machine.run_program(instrs);
+        let instrs = parse("day3", "puzzle.txt", scan_program);
+        let result = Machine::new(false).run_program(instrs);
         print!("Part 1: {}", result);
     }
 
     #[test]
     fn test_example_part2() {
-        let input = load_file("day3", "example2.txt");
-        let instrs = scan_program(input);
-        let mut machine = Machine::new(true);
-        let result = machine.run_program(instrs);
+        let instrs = parse("day3", "example2.txt", scan_program);
+        let result = Machine::new(true).run_program(instrs);
         assert_eq!(result, 48);
     }
 
     #[test]
     fn test_part2() {
-        let input = load_file("day3", "puzzle.txt");
-        let instrs = scan_program(input);
-        let mut machine = Machine::new(true);
-        let result = machine.run_program(instrs);
+        let instrs = parse("day3", "puzzle.txt", scan_program);
+        let result = Machine::new(true).run_program(instrs);
         print!("Part 2: {}", result);
     }
 }
