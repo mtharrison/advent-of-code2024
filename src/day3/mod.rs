@@ -1,193 +1,91 @@
-pub fn parse_input(input: String) -> String {
-    input
+use regex::Regex;
+
+#[derive(Debug)]
+pub enum Instruction {
+    Mul(i32, i32),
+    Do,
+    Dont,
 }
 
-pub fn parse_mul_instr(string: &[char]) -> (bool, String, usize) {
-    let mut instr = String::new();
-    let mut i = 0;
-    let len = string.len();
-
-    if i < len && string[i] == 'm' {
-        instr.push(string[i]);
-        i += 1;
-    } else {
-        return (false, instr, i);
-    }
-
-    if i < len && string[i] == 'u' {
-        instr.push(string[i]);
-        i += 1;
-    } else {
-        return (false, instr, i);
-    }
-
-    if i < len && string[i] == 'l' {
-        instr.push(string[i]);
-        i += 1;
-    } else {
-        return (false, instr, i);
-    }
-
-    if i < len && string[i] == '(' {
-        instr.push(string[i]);
-        i += 1;
-    } else {
-        return (false, instr, i);
-    }
-
-    if i < len && string[i].is_numeric() {
-        while i < len && string[i].is_numeric() {
-            instr.push(string[i]);
-            i += 1;
-        }
-    } else {
-        return (false, instr, i);
-    }
-
-    if i < len && string[i] == ',' {
-        instr.push(string[i]);
-        i += 1;
-    } else {
-        return (false, instr, i);
-    }
-
-    if i < len && string[i].is_numeric() {
-        while i < len && string[i].is_numeric() {
-            instr.push(string[i]);
-            i += 1;
-        }
-    } else {
-        return (false, instr, i);
-    }
-
-    if i < len && string[i] == ')' {
-        instr.push(string[i]);
-        i += 1;
-    } else {
-        return (false, instr, i);
-    }
-
-    (true, instr, i)
+pub struct Machine {
+    enabled: bool,
+    accumulator: i32,
+    evaluate_do_instructions: bool,
 }
 
-pub fn parse_do_dont_instr(string: &[char]) -> (bool, String, usize) {
-    let mut instr = String::new();
-    let mut i = 0;
-    let len = string.len();
-
-    if i < len && string[i] == 'd' {
-        instr.push(string[i]);
-        i += 1;
-    } else {
-        return (false, instr, i);
+impl Machine {
+    pub fn new(evaluate_do_instructions: bool) -> Self {
+        Machine {
+            enabled: true,
+            accumulator: 0,
+            evaluate_do_instructions,
+        }
     }
 
-    if i < len && string[i] == 'o' {
-        instr.push(string[i]);
-        i += 1;
-    } else {
-        return (false, instr, i);
-    }
-
-    if i < len && string[i] == '(' {
-        instr.push(string[i]);
-        i += 1;
-
-        if i < len && string[i] == ')' {
-            instr.push(string[i]);
-            i += 1;
-        } else {
-            return (false, instr, i);
-        }
-
-        return (true, "do".into(), i);
-    } else if i < len && string[i] == 'n' {
-        instr.push(string[i]);
-        i += 1;
-
-        if i < len && string[i] == '\'' {
-            instr.push(string[i]);
-            i += 1;
-        } else {
-            return (false, instr, i);
-        }
-
-        if i < len && string[i] == 't' {
-            instr.push(string[i]);
-            i += 1;
-        } else {
-            return (false, instr, i);
-        }
-
-        if i < len && string[i] == '(' {
-            instr.push(string[i]);
-            i += 1;
-        } else {
-            return (false, instr, i);
-        }
-
-        if i < len && string[i] == ')' {
-            instr.push(string[i]);
-            i += 1;
-        } else {
-            return (false, instr, i);
-        }
-
-        return (true, "dont".into(), i);
-    }
-
-    return (false, instr, i);
-}
-
-pub fn eval_mul_instr(instr: String) -> i32 {
-    let mut i = 4;
-    let chars = instr.chars().collect::<Vec<char>>();
-
-    let mut num1 = String::new();
-    while chars[i] != ',' {
-        num1.push(chars[i]);
-        i += 1;
-    }
-
-    i += 1;
-
-    let mut num2 = String::new();
-    while chars[i] != ')' {
-        num2.push(chars[i]);
-        i += 1;
-    }
-
-    let n1 = num1.parse::<i32>().unwrap();
-    let n2 = num2.parse::<i32>().unwrap();
-
-    let result = n1 * n2;
-
-    result
-}
-
-pub fn scan(input: String) -> Vec<String> {
-    let mut instrs = Vec::<String>::new();
-    let mut i = 0;
-
-    let chars = input.chars().collect::<Vec<char>>();
-
-    while i < chars.len() {
-        if chars[i] == 'm' {
-            let (parsed, instr, j) = parse_mul_instr(&chars[i..]);
-            if parsed {
-                instrs.push(instr);
+    pub fn execute(&mut self, instr: Instruction) {
+        match instr {
+            Instruction::Mul(n1, n2) => {
+                if self.enabled {
+                    self.accumulator += n1 * n2;
+                }
             }
-            i += j;
-        } else if chars[i] == 'd' {
-            let (parsed, instr, j) = parse_do_dont_instr(&chars[i..]);
-            if parsed {
-                instrs.push(instr);
+            Instruction::Do => {
+                if self.evaluate_do_instructions {
+                    self.enabled = true;
+                }
             }
-            i += j;
-        } else {
-            i += 1;
+            Instruction::Dont => {
+                if self.evaluate_do_instructions {
+                    self.enabled = false;
+                }
+            }
         }
     }
+
+    pub fn run_program(&mut self, instrs: Vec<Instruction>) -> i32 {
+        for instr in instrs {
+            self.execute(instr);
+        }
+
+        self.accumulator
+    }
+}
+
+pub fn scan_program(input: String) -> Vec<Instruction> {
+    let re = Regex::new(r"(mul\(\d+,\d+\)|do\(\)|don't\(\))").unwrap();
+    let instrs = re
+        .find_iter(&input)
+        .map(|c| c.as_str().into())
+        .map(|s: String| {
+            if s == "do()" {
+                Instruction::Do
+            } else if s == "don't()" {
+                Instruction::Dont
+            } else {
+                let mut i = 4;
+                let chars = s.chars().collect::<Vec<char>>();
+
+                let mut num1 = String::new();
+                while chars[i] != ',' {
+                    num1.push(chars[i]);
+                    i += 1;
+                }
+
+                i += 1;
+
+                let mut num2 = String::new();
+                while chars[i] != ')' {
+                    num2.push(chars[i]);
+                    i += 1;
+                }
+
+                let n1 = num1.parse::<i32>().unwrap();
+                let n2 = num2.parse::<i32>().unwrap();
+
+                Instruction::Mul(n1, n2)
+            }
+        })
+        .collect();
 
     instrs
 }
@@ -195,68 +93,41 @@ pub fn scan(input: String) -> Vec<String> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::util::parse as util_parse;
+    use crate::util::{load_file, parse as util_parse};
 
     #[test]
     fn test_example_part1() {
-        let input = util_parse::<String>("day3", "example.txt", parse_input);
-        let instrs = scan(input);
-        let mut sum = 0;
-        for instr in instrs {
-            sum += eval_mul_instr(instr);
-        }
-        assert_eq!(sum, 161);
+        let input = load_file("day3", "example.txt");
+        let instrs = scan_program(input);
+        let mut machine = Machine::new(false);
+        let result = machine.run_program(instrs);
+        assert_eq!(result, 161);
     }
 
     #[test]
     fn test_part1() {
-        let input = util_parse::<String>("day3", "puzzle.txt", parse_input);
-        let instrs = scan(input);
-        let mut sum = 0;
-        for instr in instrs {
-            if instr == "dont" || instr == "do" {
-                continue;
-            }
-            sum += eval_mul_instr(instr);
-        }
-        println!("Part 1: {}", sum);
+        let input = load_file("day3", "puzzle.txt");
+        let instrs = scan_program(input);
+        let mut machine = Machine::new(false);
+        let result = machine.run_program(instrs);
+        print!("Part 1: {}", result);
     }
 
     #[test]
     fn test_example_part2() {
-        let input = util_parse::<String>("day3", "example2.txt", parse_input);
-        let instrs = scan(input);
-        let mut enabled = true;
-        let mut sum = 0;
-        for instr in instrs {
-            if instr == "dont" {
-                enabled = false;
-            } else if instr == "do" {
-                enabled = true;
-            } else if enabled {
-                sum += eval_mul_instr(instr.clone());
-            }
-        }
-
-        assert_eq!(sum, 48);
+        let input = load_file("day3", "example2.txt");
+        let instrs = scan_program(input);
+        let mut machine = Machine::new(true);
+        let result = machine.run_program(instrs);
+        assert_eq!(result, 48);
     }
 
     #[test]
     fn test_part2() {
-        let input = util_parse::<String>("day3", "puzzle.txt", parse_input);
-        let instrs = scan(input);
-        let mut enabled = true;
-        let mut sum = 0;
-        for instr in instrs {
-            if instr == "dont" {
-                enabled = false;
-            } else if instr == "do" {
-                enabled = true;
-            } else if enabled {
-                sum += eval_mul_instr(instr.clone());
-            }
-        }
-
-        println!("Part 2: {}", sum);
+        let input = load_file("day3", "puzzle.txt");
+        let instrs = scan_program(input);
+        let mut machine = Machine::new(true);
+        let result = machine.run_program(instrs);
+        print!("Part 2: {}", result);
     }
 }
