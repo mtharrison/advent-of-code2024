@@ -93,7 +93,7 @@ pub fn scan_program(input: String) -> Vec<Instruction> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::util::{load_file, parse as util_parse};
+    use crate::util::load_file;
 
     #[test]
     fn test_example_part1() {
