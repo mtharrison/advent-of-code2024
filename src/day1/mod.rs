@@ -1,4 +1,4 @@
-fn parse_input(input: &str) -> (Vec<i32>, Vec<i32>) {
+pub fn parse_input(input: String) -> (Vec<i32>, Vec<i32>) {
     let mut lhs = Vec::new();
     let mut rhs = Vec::new();
 
@@ -14,7 +14,7 @@ fn parse_input(input: &str) -> (Vec<i32>, Vec<i32>) {
     (lhs, rhs)
 }
 
-fn get_distance(mut lhs: Vec<i32>, mut rhs: Vec<i32>) -> i32 {
+pub fn get_distance(mut lhs: Vec<i32>, mut rhs: Vec<i32>) -> i32 {
     let mut distance = 0;
 
     lhs.sort();
@@ -29,7 +29,7 @@ fn get_distance(mut lhs: Vec<i32>, mut rhs: Vec<i32>) -> i32 {
     distance
 }
 
-fn get_similarity(lhs: Vec<i32>, rhs: Vec<i32>) -> i32 {
+pub fn get_similarity(lhs: Vec<i32>, rhs: Vec<i32>) -> i32 {
     let mut similarity = 0;
 
     for num in lhs {
@@ -47,35 +47,35 @@ fn get_similarity(lhs: Vec<i32>, rhs: Vec<i32>) -> i32 {
     similarity
 }
 
-fn main() {}
-
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::util::parse as util_parse;
 
     #[test]
-    fn test_example() {
-        let input =
-            std::fs::read_to_string("bin/day1/example.txt").expect("Failed to read input file");
-        let (lhs, rhs) = parse_input(&input);
+    fn test_example_part1() {
+        let (lhs, rhs) = util_parse::<(Vec<i32>, Vec<i32>)>("day1", "example.txt", parse_input);
         let distance = get_distance(lhs, rhs);
         assert_eq!(distance, 11);
     }
 
     #[test]
+    fn test_example_part2() {
+        let (lhs, rhs) = util_parse::<(Vec<i32>, Vec<i32>)>("day1", "example.txt", parse_input);
+        let distance = get_similarity(lhs, rhs);
+        assert_eq!(distance, 31);
+    }
+
+    #[test]
     fn test_part_1() {
-        let input =
-            std::fs::read_to_string("bin/day1/puzzle.txt").expect("Failed to read input file");
-        let (lhs, rhs) = parse_input(&input);
+        let (lhs, rhs) = util_parse::<(Vec<i32>, Vec<i32>)>("day1", "puzzle.txt", parse_input);
         let distance = get_distance(lhs, rhs);
         println!("Distance: {}", distance);
     }
 
     #[test]
     fn test_part_2() {
-        let input =
-            std::fs::read_to_string("bin/day1/puzzle.txt").expect("Failed to read input file");
-        let (lhs, rhs) = parse_input(&input);
+        let (lhs, rhs) = util_parse::<(Vec<i32>, Vec<i32>)>("day1", "puzzle.txt", parse_input);
         let similarity = get_similarity(lhs, rhs);
         println!("Similarity: {}", similarity);
     }
