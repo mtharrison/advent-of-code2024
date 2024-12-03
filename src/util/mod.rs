@@ -1,5 +1,5 @@
 pub fn load_file(day: &str, filename: &str) -> String {
-    let path = format!("src/{}/{}", day, filename);
+    let path = format!("src/{}/inputs/{}", day, filename);
     let contents = std::fs::read_to_string(path).expect("Failed to read input file");
     contents
 }
@@ -16,13 +16,13 @@ mod tests {
 
     #[test]
     fn test_load_file() {
-        let contents = load_file("day1", "example.txt");
+        let contents = load_file("util", "example.txt");
         assert_eq!(contents, "3   4\n4   3\n2   5\n1   3\n3   9\n3   3\n");
     }
 
     #[test]
     fn test_parse_file() {
-        let (lhs, rhs) = parse::<(Vec<i32>, Vec<i32>)>("day1", "example.txt", |input| {
+        let (lhs, rhs) = parse::<(Vec<i32>, Vec<i32>)>("util", "example.txt", |input| {
             let mut result = Vec::new();
             for line in input.lines() {
                 let parts: Vec<i32> = line
