@@ -97,28 +97,28 @@ mod tests {
 
     #[test]
     fn test_example_part1() {
-        let instrs = parse("day3", "example.txt", scan_program);
+        let instrs = parse("day03", "example.txt", scan_program);
         let result = Machine::new(false).run_program(instrs);
         assert_eq!(result, 161);
     }
 
     #[test]
     fn test_part1() {
-        let instrs = parse("day3", "puzzle.txt", scan_program);
+        let instrs = parse("day03", "puzzle.txt", scan_program);
         let result = Machine::new(false).run_program(instrs);
         print!("Part 1: {}", result);
     }
 
     #[test]
     fn test_example_part2() {
-        let instrs = parse("day3", "example2.txt", scan_program);
+        let instrs = parse("day03", "example2.txt", scan_program);
         let result = Machine::new(true).run_program(instrs);
         assert_eq!(result, 48);
     }
 
     #[test]
     fn test_part2() {
-        let instrs = parse("day3", "puzzle.txt", scan_program);
+        let instrs = parse("day03", "puzzle.txt", scan_program);
         let result = Machine::new(true).run_program(instrs);
         print!("Part 2: {}", result);
     }

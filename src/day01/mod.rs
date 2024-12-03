@@ -54,28 +54,28 @@ mod tests {
 
     #[test]
     fn test_example_part1() {
-        let (lhs, rhs) = util_parse::<(Vec<i32>, Vec<i32>)>("day1", "example.txt", parse_input);
+        let (lhs, rhs) = util_parse::<(Vec<i32>, Vec<i32>)>("day01", "example.txt", parse_input);
         let distance = get_distance(lhs, rhs);
         assert_eq!(distance, 11);
     }
 
     #[test]
     fn test_example_part2() {
-        let (lhs, rhs) = util_parse::<(Vec<i32>, Vec<i32>)>("day1", "example.txt", parse_input);
+        let (lhs, rhs) = util_parse::<(Vec<i32>, Vec<i32>)>("day01", "example.txt", parse_input);
         let distance = get_similarity(lhs, rhs);
         assert_eq!(distance, 31);
     }
 
     #[test]
     fn test_part_1() {
-        let (lhs, rhs) = util_parse::<(Vec<i32>, Vec<i32>)>("day1", "puzzle.txt", parse_input);
+        let (lhs, rhs) = util_parse::<(Vec<i32>, Vec<i32>)>("day01", "puzzle.txt", parse_input);
         let distance = get_distance(lhs, rhs);
         println!("Distance: {}", distance);
     }
 
     #[test]
     fn test_part_2() {
-        let (lhs, rhs) = util_parse::<(Vec<i32>, Vec<i32>)>("day1", "puzzle.txt", parse_input);
+        let (lhs, rhs) = util_parse::<(Vec<i32>, Vec<i32>)>("day01", "puzzle.txt", parse_input);
         let similarity = get_similarity(lhs, rhs);
         println!("Similarity: {}", similarity);
     }

@@ -56,28 +56,28 @@ mod tests {
 
     #[test]
     fn test_example_part1() {
-        let reports = util_parse::<Vec<Vec<i32>>>("day2", "example.txt", parse_input);
+        let reports = util_parse::<Vec<Vec<i32>>>("day02", "example.txt", parse_input);
         let count = count_safe(reports, false);
         assert_eq!(count, 2);
     }
 
     #[test]
     fn test_example_part2() {
-        let reports = util_parse::<Vec<Vec<i32>>>("day2", "example.txt", parse_input);
+        let reports = util_parse::<Vec<Vec<i32>>>("day02", "example.txt", parse_input);
         let count = count_safe(reports, true);
         assert_eq!(count, 4);
     }
 
     #[test]
     fn test_part1() {
-        let reports = util_parse::<Vec<Vec<i32>>>("day2", "puzzle.txt", parse_input);
+        let reports = util_parse::<Vec<Vec<i32>>>("day02", "puzzle.txt", parse_input);
         let count = count_safe(reports, false);
         println!("Count: {}", count);
     }
 
     #[test]
     fn test_part2() {
-        let reports = util_parse::<Vec<Vec<i32>>>("day2", "puzzle.txt", parse_input);
+        let reports = util_parse::<Vec<Vec<i32>>>("day02", "puzzle.txt", parse_input);
         let count = count_safe(reports, true);
         println!("Count: {}", count);
     }
