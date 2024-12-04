@@ -1,20 +1,18 @@
 use crate::grid::Grid;
 
 pub fn is_xmas_grid(grid: &Grid<char>) -> bool {
-    let diag_indices_1 = vec![(0, 0), (1, 1), (2, 2)];
-    let diag_indices_2 = vec![(2, 0), (1, 1), (0, 2)];
+    let lines = vec![vec![(0, 0), (1, 1), (2, 2)], vec![(2, 0), (1, 1), (0, 2)]];
 
-    let diag_1 = diag_indices_1
+    let strings = lines
         .iter()
-        .map(|(x, y)| grid.get(*x, *y).unwrap())
-        .collect::<String>();
+        .map(|line| {
+            line.iter()
+                .map(|(x, y)| grid.get(*x, *y).unwrap())
+                .collect::<String>()
+        })
+        .collect::<Vec<String>>();
 
-    let diag_2 = diag_indices_2
-        .iter()
-        .map(|(x, y)| grid.get(*x, *y).unwrap())
-        .collect::<String>();
-
-    (diag_1 == "MAS" || diag_1 == "SAM") && (diag_2 == "MAS" || diag_2 == "SAM")
+    strings.iter().all(|s| s == "MAS" || s == "SAM")
 }
 
 #[cfg(test)]
