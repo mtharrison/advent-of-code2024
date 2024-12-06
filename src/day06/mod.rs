@@ -114,6 +114,19 @@ impl World {
 
         Result::Escaped
     }
+
+    fn reachable_cells(&mut self) -> Vec<(usize, usize)> {
+        let mut reachable_cells = Vec::new();
+        while self.guard_position.is_some() {
+            self.step();
+            if let Some(guard_position) = self.guard_position {
+                if !reachable_cells.contains(&guard_position) {
+                    reachable_cells.push(guard_position);
+                }
+            }
+        }
+        reachable_cells
+    }
 }
 
 impl From<&str> for World {
@@ -200,19 +213,20 @@ mod tests {
         assert_eq!(world.visited(), 5551);
     }
 
+    // This is so obviously brute force that it's wrong, will revisit later
+
     #[test]
     fn test_example_part2() {
         let mut possible_obstacle_positions = 0;
         let world = util_parse::<World>("day06", "example.txt", parse_input);
-        for i in 0..world.cells.len() {
-            for j in 0..world.cells[0].len() {
-                let mut world = world.clone();
-                if world.cells[i][j] == Cell::Vacant {
-                    world.cells[i][j] = Cell::Obstacle;
-                    match world.play() {
-                        Result::Loop => possible_obstacle_positions += 1,
-                        _ => {}
-                    }
+        let reachable_cells = world.clone().reachable_cells();
+        for (i, j) in reachable_cells {
+            let mut world = world.clone();
+            if world.cells[i][j] == Cell::Vacant {
+                world.cells[i][j] = Cell::Obstacle;
+                match world.play() {
+                    Result::Loop => possible_obstacle_positions += 1,
+                    _ => {}
                 }
             }
         }
@@ -222,18 +236,16 @@ mod tests {
 
     #[test]
     fn test_part2() {
-        // This is so obviously brute force that it's wrong, will revisit later
         let mut possible_obstacle_positions = 0;
         let world = util_parse::<World>("day06", "puzzle.txt", parse_input);
-        for i in 0..world.cells.len() {
-            for j in 0..world.cells[0].len() {
-                let mut world = world.clone();
-                if world.cells[i][j] == Cell::Vacant {
-                    world.cells[i][j] = Cell::Obstacle;
-                    match world.play() {
-                        Result::Loop => possible_obstacle_positions += 1,
-                        _ => {}
-                    }
+        let reachable_cells = world.clone().reachable_cells();
+        for (i, j) in reachable_cells {
+            let mut world = world.clone();
+            if world.cells[i][j] == Cell::Vacant {
+                world.cells[i][j] = Cell::Obstacle;
+                match world.play() {
+                    Result::Loop => possible_obstacle_positions += 1,
+                    _ => {}
                 }
             }
         }
