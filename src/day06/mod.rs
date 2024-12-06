@@ -203,7 +203,7 @@ mod tests {
     #[test]
     fn test_example_part2() {
         let mut possible_obstacle_positions = 0;
-        let mut world = util_parse::<World>("day06", "example.txt", parse_input);
+        let world = util_parse::<World>("day06", "example.txt", parse_input);
         for i in 0..world.cells.len() {
             for j in 0..world.cells[0].len() {
                 let mut world = world.clone();
@@ -223,7 +223,7 @@ mod tests {
     #[test]
     fn test_part2() {
         let mut possible_obstacle_positions = 0;
-        let mut world = util_parse::<World>("day06", "puzzle.txt", parse_input);
+        let world = util_parse::<World>("day06", "puzzle.txt", parse_input);
         let possible_worlds = world.cells.len() * world.cells[0].len();
         let mut world_num = 0;
         for i in 0..world.cells.len() {
