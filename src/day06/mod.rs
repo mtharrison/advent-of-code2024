@@ -205,9 +205,6 @@ mod tests {
             let (result, _) = world.play();
             if result == Result::Loop {
                 obstacle_pos.insert((*i, *j));
-                println!("Obstacle at: {}, {}, LOOP", i, j);
-            } else {
-                println!("Obstacle at: {}, {}, ESCAPED", i, j);
             }
             world.remove_obstacle(*i, *j);
         }
