@@ -222,10 +222,9 @@ mod tests {
 
     #[test]
     fn test_part2() {
+        // This is so obviously brute force that it's wrong, will revisit later
         let mut possible_obstacle_positions = 0;
         let world = util_parse::<World>("day06", "puzzle.txt", parse_input);
-        let possible_worlds = world.cells.len() * world.cells[0].len();
-        let mut world_num = 0;
         for i in 0..world.cells.len() {
             for j in 0..world.cells[0].len() {
                 let mut world = world.clone();
@@ -236,14 +235,9 @@ mod tests {
                         _ => {}
                     }
                 }
-
-                world_num += 1;
-                if world_num % 100 == 0 {
-                    println!("Progress: {}/{}", world_num, possible_worlds);
-                }
             }
         }
 
-        assert_eq!(possible_obstacle_positions, 6);
+        assert_eq!(possible_obstacle_positions, 1939);
     }
 }
