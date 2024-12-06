@@ -111,8 +111,8 @@ impl World {
     }
 
     pub fn play(&mut self) -> (Result, HashSet<(usize, usize)>) {
-        let mut visited_with_dir = HashSet::new();
-        let mut visited = HashSet::new();
+        let mut visited_with_dir = HashSet::with_capacity(self.cells.len() * self.cells[0].len());
+        let mut visited = HashSet::with_capacity(self.cells.len() * self.cells[0].len());
 
         while let Some(ref guard) = self.guard {
             let state = (guard.position, guard.direction);
