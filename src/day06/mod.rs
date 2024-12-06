@@ -1,4 +1,4 @@
-use std::{collections::HashSet, fmt::Display};
+use std::collections::HashSet;
 
 #[derive(Clone, PartialEq, Debug, Eq, Hash, PartialOrd, Ord, Copy)]
 pub enum Direction {
@@ -14,37 +14,33 @@ pub enum Result {
     Loop,
 }
 
-impl Direction {
-    fn rotate(&self) -> Direction {
-        match self {
-            Direction::Up => Direction::Right,
-            Direction::Right => Direction::Down,
-            Direction::Down => Direction::Left,
-            Direction::Left => Direction::Up,
-        }
-    }
-}
-
 #[derive(PartialEq, Clone)]
 pub enum Cell {
-    Guard(Direction),
+    Guard,
     Vacant,
     Obstacle,
     Visited,
 }
 
 #[derive(Clone)]
+pub struct GuardState {
+    position: (usize, usize),
+    direction: Direction,
+}
+
+#[derive(Clone)]
 pub struct World {
     cells: Vec<Vec<Cell>>,
-    guard_position: Option<(usize, usize)>,
-    guard_direction: Direction,
+    guard: Option<GuardState>,
+    initial_guard: Option<GuardState>,
 }
 
 impl World {
     pub fn step(&mut self) {
-        match self.guard_position {
-            Some((i, j)) => {
-                let direction = self.guard_direction;
+        match self.guard {
+            Some(ref mut guard) => {
+                let (i, j) = guard.position;
+                let direction = guard.direction;
 
                 let (i_next, j_next) = {
                     let i = i as isize;
@@ -63,7 +59,7 @@ impl World {
                     || j_next >= self.cells[0].len() as isize
                 {
                     self.cells[i][j] = Cell::Visited;
-                    self.guard_position = None;
+                    self.guard = None;
                     return;
                 }
 
@@ -73,13 +69,24 @@ impl World {
                 match next_cell {
                     Cell::Vacant | Cell::Visited => {
                         self.cells[i][j] = Cell::Visited;
-                        self.cells[i_next][j_next] = Cell::Guard(direction);
-                        self.guard_position = Some((i_next, j_next));
+                        self.cells[i_next][j_next] = Cell::Guard;
+                        self.guard = Some(GuardState {
+                            position: (i_next, j_next),
+                            direction,
+                        });
                     }
                     Cell::Obstacle => {
-                        let new_direction = direction.rotate();
-                        self.guard_direction = new_direction;
-                        self.cells[i][j] = Cell::Guard(new_direction);
+                        let new_direction = match direction {
+                            Direction::Up => Direction::Right,
+                            Direction::Right => Direction::Down,
+                            Direction::Down => Direction::Left,
+                            Direction::Left => Direction::Up,
+                        };
+                        self.guard = Some(GuardState {
+                            position: (i, j),
+                            direction: new_direction,
+                        });
+                        self.cells[i][j] = Cell::Guard;
                     }
                     _ => panic!("Invalid cell"),
                 }
@@ -88,21 +95,32 @@ impl World {
         }
     }
 
+    pub fn reset(&mut self) {
+        if let Some(guard_pos) = self.guard.as_ref() {
+            self.cells[guard_pos.position.0][guard_pos.position.1] = Cell::Vacant;
+        }
+        self.guard = self.initial_guard.clone();
+    }
+
     pub fn place_obstacle(&mut self, i: usize, j: usize) {
         self.cells[i][j] = Cell::Obstacle;
+    }
+
+    pub fn remove_obstacle(&mut self, i: usize, j: usize) {
+        self.cells[i][j] = Cell::Vacant;
     }
 
     pub fn play(&mut self) -> (Result, HashSet<(usize, usize)>) {
         let mut visited_with_dir = HashSet::new();
         let mut visited = HashSet::new();
 
-        while let Some((i, j)) = self.guard_position {
-            let state = (i, j, self.guard_direction);
+        while let Some(ref guard) = self.guard {
+            let state = (guard.position, guard.direction);
             if visited_with_dir.contains(&state) {
                 return (Result::Loop, visited);
             }
             visited_with_dir.insert(state);
-            visited.insert((i, j));
+            visited.insert(guard.position);
             self.step();
         }
 
@@ -112,8 +130,7 @@ impl World {
 
 impl From<&str> for World {
     fn from(input: &str) -> Self {
-        let mut guard_position = None;
-        let mut guard_direction = Direction::Up;
+        let mut guard = None;
 
         let cells = input
             .lines()
@@ -123,7 +140,6 @@ impl From<&str> for World {
                     .enumerate()
                     .map(|(j, c)| match c {
                         '^' | 'v' | '<' | '>' => {
-                            guard_position = Some((i, j));
                             let dir = match c {
                                 '^' => Direction::Up,
                                 'v' => Direction::Down,
@@ -131,8 +147,11 @@ impl From<&str> for World {
                                 '>' => Direction::Right,
                                 _ => unreachable!(),
                             };
-                            guard_direction = dir;
-                            Cell::Guard(dir)
+                            guard = Some(GuardState {
+                                position: (i, j),
+                                direction: dir,
+                            });
+                            Cell::Guard
                         }
                         '.' => Cell::Vacant,
                         '#' => Cell::Obstacle,
@@ -145,29 +164,9 @@ impl From<&str> for World {
 
         Self {
             cells,
-            guard_position,
-            guard_direction,
+            initial_guard: guard.clone(),
+            guard,
         }
-    }
-}
-
-impl Display for World {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        for row in &self.cells {
-            for cell in row {
-                match cell {
-                    Cell::Guard(Direction::Up) => write!(f, "^")?,
-                    Cell::Guard(Direction::Down) => write!(f, "v")?,
-                    Cell::Guard(Direction::Left) => write!(f, "<")?,
-                    Cell::Guard(Direction::Right) => write!(f, ">")?,
-                    Cell::Vacant => write!(f, ".")?,
-                    Cell::Obstacle => write!(f, "#")?,
-                    Cell::Visited => write!(f, "X")?,
-                }
-            }
-            writeln!(f)?;
-        }
-        Ok(())
     }
 }
 
@@ -197,16 +196,16 @@ mod tests {
     #[test]
     fn test_example_part2() {
         let mut world = util_parse::<World>("day06", "example.txt", parse_input);
-        let clean_world = world.clone();
         let (_, visited) = world.play();
         let mut obstacle_pos = HashSet::new();
         for (i, j) in visited.iter().skip(1) {
-            let mut new_world = clean_world.clone();
-            new_world.place_obstacle(*i, *j);
-            let (result, _) = new_world.play();
+            world.place_obstacle(*i, *j);
+            world.reset();
+            let (result, _) = world.play();
             if result == Result::Loop {
                 obstacle_pos.insert((*i, *j));
             }
+            world.remove_obstacle(*i, *j);
         }
 
         assert_eq!(obstacle_pos.len(), 6);
@@ -215,16 +214,16 @@ mod tests {
     #[test]
     fn test_part2() {
         let mut world = util_parse::<World>("day06", "puzzle.txt", parse_input);
-        let clean_world = world.clone();
         let (_, visited) = world.play();
         let mut obstacle_pos = HashSet::new();
         for (i, j) in visited.iter().skip(1) {
-            let mut new_world = clean_world.clone();
-            new_world.place_obstacle(*i, *j);
-            let (result, _) = new_world.play();
+            world.place_obstacle(*i, *j);
+            world.reset();
+            let (result, _) = world.play();
             if result == Result::Loop {
                 obstacle_pos.insert((*i, *j));
             }
+            world.remove_obstacle(*i, *j);
         }
 
         assert_eq!(obstacle_pos.len(), 1939);
