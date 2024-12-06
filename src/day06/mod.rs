@@ -1,9 +1,6 @@
-use std::{
-    collections::{BTreeSet, HashSet},
-    fmt::Display,
-};
+use std::{collections::HashSet, fmt::Display};
 
-#[derive(Clone, PartialEq, Debug, Eq, Hash, PartialOrd, Ord)]
+#[derive(Clone, PartialEq, Debug, Eq, Hash, PartialOrd, Ord, Copy)]
 pub enum Direction {
     Up,
     Down,
@@ -47,7 +44,7 @@ impl World {
     pub fn step(&mut self) {
         match self.guard_position {
             Some((i, j)) => {
-                let direction = self.guard_direction.clone();
+                let direction = self.guard_direction;
 
                 let (i_next, j_next) = {
                     let i = i as isize;
@@ -76,13 +73,13 @@ impl World {
                 match next_cell {
                     Cell::Vacant | Cell::Visited => {
                         self.cells[i][j] = Cell::Visited;
-                        self.cells[i_next][j_next] = Cell::Guard(direction.clone());
+                        self.cells[i_next][j_next] = Cell::Guard(direction);
                         self.guard_position = Some((i_next, j_next));
                     }
                     Cell::Obstacle => {
                         let new_direction = direction.rotate();
-                        self.guard_direction = new_direction.clone();
-                        self.cells[i][j] = Cell::Guard(new_direction.clone());
+                        self.guard_direction = new_direction;
+                        self.cells[i][j] = Cell::Guard(new_direction);
                     }
                     _ => panic!("Invalid cell"),
                 }
@@ -95,40 +92,21 @@ impl World {
         self.cells[i][j] = Cell::Obstacle;
     }
 
-    pub fn play(
-        &mut self,
-    ) -> (
-        Result,
-        BTreeSet<(usize, usize, Direction)>,
-        HashSet<(usize, usize)>,
-    ) {
-        let mut visited_with_dir = BTreeSet::new();
+    pub fn play(&mut self) -> (Result, HashSet<(usize, usize)>) {
+        let mut visited_with_dir = HashSet::new();
         let mut visited = HashSet::new();
 
         while let Some((i, j)) = self.guard_position {
-            let state = (i, j, self.guard_direction.clone());
+            let state = (i, j, self.guard_direction);
             if visited_with_dir.contains(&state) {
-                return (Result::Loop, visited_with_dir, visited);
+                return (Result::Loop, visited);
             }
             visited_with_dir.insert(state);
             visited.insert((i, j));
             self.step();
         }
 
-        (Result::Escaped, visited_with_dir, visited)
-    }
-
-    pub fn place_guard(&mut self, i: usize, j: usize, dir: Direction) {
-        if let Some((i, j)) = self.guard_position {
-            self.cells[i][j] = Cell::Vacant;
-        }
-        self.cells[i][j] = Cell::Guard(dir.clone());
-        self.guard_position = Some((i, j));
-        self.guard_direction = dir.clone();
-    }
-
-    pub fn remove_obstacle(&mut self, i: usize, j: usize) {
-        self.cells[i][j] = Cell::Vacant;
+        (Result::Escaped, visited)
     }
 }
 
@@ -153,7 +131,7 @@ impl From<&str> for World {
                                 '>' => Direction::Right,
                                 _ => unreachable!(),
                             };
-                            guard_direction = dir.clone();
+                            guard_direction = dir;
                             Cell::Guard(dir)
                         }
                         '.' => Cell::Vacant,
@@ -205,14 +183,14 @@ mod tests {
     #[test]
     fn test_example_part1() {
         let mut world = util_parse::<World>("day06", "example.txt", parse_input);
-        let (_, _, visited) = world.play();
+        let (_, visited) = world.play();
         assert_eq!(visited.len(), 41);
     }
 
     #[test]
     fn test_part1() {
         let mut world = util_parse::<World>("day06", "puzzle.txt", parse_input);
-        let (_, _, visited) = world.play();
+        let (_, visited) = world.play();
         assert_eq!(visited.len(), 5551);
     }
 
@@ -220,14 +198,14 @@ mod tests {
     fn test_example_part2() {
         let mut world = util_parse::<World>("day06", "example.txt", parse_input);
         let clean_world = world.clone();
-        let (_, visited, _) = world.play();
+        let (_, visited) = world.play();
         let mut obstacle_pos = HashSet::new();
-        for (i_obj, j_obj, _) in visited.iter().skip(1) {
+        for (i, j) in visited.iter().skip(1) {
             let mut new_world = clean_world.clone();
-            new_world.place_obstacle(*i_obj, *j_obj);
-            let (result, _, _) = new_world.play();
+            new_world.place_obstacle(*i, *j);
+            let (result, _) = new_world.play();
             if result == Result::Loop {
-                obstacle_pos.insert((*i_obj, *j_obj));
+                obstacle_pos.insert((*i, *j));
             }
         }
 
@@ -238,17 +216,14 @@ mod tests {
     fn test_part2() {
         let mut world = util_parse::<World>("day06", "puzzle.txt", parse_input);
         let clean_world = world.clone();
-        let (_, visited, _) = world.play();
+        let (_, visited) = world.play();
         let mut obstacle_pos = HashSet::new();
-        for (i_obj, j_obj, _) in visited.iter().skip(1) {
-            if obstacle_pos.contains(&(*i_obj, *j_obj)) {
-                continue;
-            }
+        for (i, j) in visited.iter().skip(1) {
             let mut new_world = clean_world.clone();
-            new_world.place_obstacle(*i_obj, *j_obj);
-            let (result, _, _) = new_world.play();
+            new_world.place_obstacle(*i, *j);
+            let (result, _) = new_world.play();
             if result == Result::Loop {
-                obstacle_pos.insert((*i_obj, *j_obj));
+                obstacle_pos.insert((*i, *j));
             }
         }
 
