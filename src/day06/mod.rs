@@ -1,6 +1,6 @@
 use ahash::{HashSet, HashSetExt};
 
-#[derive(Clone, PartialEq, Debug, Eq, Hash, PartialOrd, Ord, Copy)]
+#[derive(Clone, Copy, Eq, PartialEq, Hash)]
 pub enum Direction {
     Up,
     Down,
@@ -33,6 +33,7 @@ pub struct World {
     cells: Vec<Vec<Cell>>,
     guard: Option<GuardState>,
     initial_guard: Option<GuardState>,
+    initial_cells: Vec<Vec<Cell>>,
 }
 
 impl World {
@@ -96,9 +97,7 @@ impl World {
     }
 
     pub fn reset(&mut self) {
-        if let Some(guard_pos) = self.guard.as_ref() {
-            self.cells[guard_pos.position.0][guard_pos.position.1] = Cell::Vacant;
-        }
+        self.cells = self.initial_cells.clone();
         self.guard = self.initial_guard.clone();
     }
 
@@ -132,7 +131,7 @@ impl From<&str> for World {
     fn from(input: &str) -> Self {
         let mut guard = None;
 
-        let cells = input
+        let cells: Vec<_> = input
             .lines()
             .enumerate()
             .map(|(i, line)| {
@@ -163,6 +162,7 @@ impl From<&str> for World {
             .collect();
 
         Self {
+            initial_cells: cells.clone(),
             cells,
             initial_guard: guard.clone(),
             guard,
@@ -198,12 +198,16 @@ mod tests {
         let mut world = util_parse::<World>("day06", "example.txt", parse_input);
         let (_, visited) = world.play();
         let mut obstacle_pos = HashSet::default();
-        for (i, j) in visited.iter().skip(1) {
-            world.place_obstacle(*i, *j);
+        for (i, j) in visited.iter() {
             world.reset();
+            world.place_obstacle(*i, *j);
+
             let (result, _) = world.play();
             if result == Result::Loop {
                 obstacle_pos.insert((*i, *j));
+                println!("Obstacle at: {}, {}, LOOP", i, j);
+            } else {
+                println!("Obstacle at: {}, {}, ESCAPED", i, j);
             }
             world.remove_obstacle(*i, *j);
         }
@@ -217,8 +221,9 @@ mod tests {
         let (_, visited) = world.play();
         let mut obstacle_pos = HashSet::default();
         for (i, j) in visited.iter() {
-            world.place_obstacle(*i, *j);
             world.reset();
+            world.place_obstacle(*i, *j);
+
             let (result, _) = world.play();
             if result == Result::Loop {
                 obstacle_pos.insert((*i, *j));
