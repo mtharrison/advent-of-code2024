@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use ahash::{HashSet, HashSetExt};
 
 #[derive(Clone, PartialEq, Debug, Eq, Hash, PartialOrd, Ord, Copy)]
 pub enum Direction {
@@ -197,7 +197,7 @@ mod tests {
     fn test_example_part2() {
         let mut world = util_parse::<World>("day06", "example.txt", parse_input);
         let (_, visited) = world.play();
-        let mut obstacle_pos = HashSet::new();
+        let mut obstacle_pos = HashSet::default();
         for (i, j) in visited.iter().skip(1) {
             world.place_obstacle(*i, *j);
             world.reset();
@@ -215,8 +215,8 @@ mod tests {
     fn test_part2() {
         let mut world = util_parse::<World>("day06", "puzzle.txt", parse_input);
         let (_, visited) = world.play();
-        let mut obstacle_pos = HashSet::new();
-        for (i, j) in visited.iter().skip(1) {
+        let mut obstacle_pos = HashSet::default();
+        for (i, j) in visited.iter() {
             world.place_obstacle(*i, *j);
             world.reset();
             let (result, _) = world.play();
