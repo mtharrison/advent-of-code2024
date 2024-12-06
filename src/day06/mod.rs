@@ -1,6 +1,9 @@
-use std::{collections::HashSet, fmt::Display};
+use std::{
+    collections::{BTreeSet, HashSet},
+    fmt::Display,
+};
 
-#[derive(Clone, PartialEq, Debug)]
+#[derive(Clone, PartialEq, Debug, Eq, Hash, PartialOrd, Ord)]
 pub enum Direction {
     Up,
     Down,
@@ -96,10 +99,10 @@ impl World {
         &mut self,
     ) -> (
         Result,
-        Vec<(usize, usize, Direction)>,
+        BTreeSet<(usize, usize, Direction)>,
         HashSet<(usize, usize)>,
     ) {
-        let mut visited_with_dir = Vec::new();
+        let mut visited_with_dir = BTreeSet::new();
         let mut visited = HashSet::new();
 
         while let Some((i, j)) = self.guard_position {
@@ -107,7 +110,7 @@ impl World {
             if visited_with_dir.contains(&state) {
                 return (Result::Loop, visited_with_dir, visited);
             }
-            visited_with_dir.push(state);
+            visited_with_dir.insert(state);
             visited.insert((i, j));
             self.step();
         }
@@ -196,8 +199,6 @@ pub fn parse_input(input: String) -> World {
 
 #[cfg(test)]
 mod tests {
-    use core::num;
-
     use super::*;
     use crate::util::parse as util_parse;
 
@@ -221,11 +222,9 @@ mod tests {
         let clean_world = world.clone();
         let (_, visited, _) = world.play();
         let mut obstacle_pos = HashSet::new();
-        for i in 1..visited.len() {
+        for (i_obj, j_obj, _) in visited.iter().skip(1) {
             let mut new_world = clean_world.clone();
-            let (i_obj, j_obj, _) = &visited[i];
             new_world.place_obstacle(*i_obj, *j_obj);
-
             let (result, _, _) = new_world.play();
             if result == Result::Loop {
                 obstacle_pos.insert((*i_obj, *j_obj));
@@ -241,11 +240,12 @@ mod tests {
         let clean_world = world.clone();
         let (_, visited, _) = world.play();
         let mut obstacle_pos = HashSet::new();
-        for i in 1..visited.len() {
+        for (i_obj, j_obj, _) in visited.iter().skip(1) {
+            if obstacle_pos.contains(&(*i_obj, *j_obj)) {
+                continue;
+            }
             let mut new_world = clean_world.clone();
-            let (i_obj, j_obj, _) = &visited[i];
             new_world.place_obstacle(*i_obj, *j_obj);
-
             let (result, _, _) = new_world.play();
             if result == Result::Loop {
                 obstacle_pos.insert((*i_obj, *j_obj));
