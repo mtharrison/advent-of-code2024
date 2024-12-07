@@ -1,5 +1,3 @@
-use std::str::FromStr;
-
 pub fn load_file(day: &str, filename: &str) -> String {
     let path = format!("src/{}/inputs/{}", day, filename);
     let contents = std::fs::read_to_string(path).expect("Failed to read input file");
