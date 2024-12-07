@@ -36,10 +36,7 @@ pub fn sum_valid(operations: Vec<char>, input: &Vec<Equation>) -> i64 {
                     match operator {
                         '+' => acc += operand,
                         '*' => acc *= operand,
-                        '|' => {
-                            // convert both operands to strings, concatenate them and parse the result
-                            acc = format!("{}{}", acc, operand).parse().unwrap();
-                        }
+                        '|' => acc = acc * i64::pow(10, operand.ilog10() + 1) + operand,
                         _ => panic!("Invalid operator"),
                     }
                 }

@@ -13,6 +13,5 @@ regex = "1.11.1"
 name = "generate"
 path = "bin/generate/main.rs"
 
-
 [profile.test]
 inherits = "release"
