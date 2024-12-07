@@ -1,4 +1,5 @@
 use itertools::Itertools;
+use rayon::prelude::*;
 
 type Equation = (i64, Vec<i64>);
 
@@ -21,33 +22,36 @@ pub fn parse_input(input: String) -> Vec<Equation> {
 }
 
 pub fn sum_valid(operations: Vec<char>, input: &Vec<Equation>) -> i64 {
-    let mut total_sum = 0;
-    for (result, operands) in input {
-        for operators in vec![operations.iter(); operands.len() - 1]
-            .into_iter()
-            .multi_cartesian_product()
-        {
-            let mut acc = 0;
-            for (i, &operand) in operands.iter().enumerate() {
-                if i == 0 {
-                    acc = operand;
-                } else {
-                    let operator = operators[i - 1];
-                    match operator {
-                        '+' => acc += operand,
-                        '*' => acc *= operand,
-                        '|' => acc = acc * i64::pow(10, operand.ilog10() + 1) + operand,
-                        _ => panic!("Invalid operator"),
+    let total_sum = input
+        .par_iter()
+        .map(|(result, operands)| {
+            for operators in vec![operations.iter(); operands.len() - 1]
+                .into_iter()
+                .multi_cartesian_product()
+            {
+                let mut acc = 0;
+                for (i, &operand) in operands.iter().enumerate() {
+                    if i == 0 {
+                        acc = operand;
+                    } else {
+                        let operator = operators[i - 1];
+                        match operator {
+                            '+' => acc += operand,
+                            '*' => acc *= operand,
+                            '|' => acc = acc * i64::pow(10, operand.ilog10() + 1) + operand,
+                            _ => panic!("Invalid operator"),
+                        }
                     }
                 }
+                if acc == *result {
+                    // println!("Found: {:?} = {:?} {:?}", acc, operators, operands);
+                    return *result;
+                }
             }
-            if acc == *result {
-                // println!("Found: {:?} = {:?} {:?}", acc, operators, operands);
-                total_sum += result;
-                break;
-            }
-        }
-    }
+
+            return 0;
+        })
+        .sum();
 
     total_sum
 }
