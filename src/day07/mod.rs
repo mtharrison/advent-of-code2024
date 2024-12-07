@@ -1,6 +1,6 @@
 use itertools::Itertools;
 
-type Equation = (u64, Vec<u64>);
+type Equation = (i64, Vec<i64>);
 
 pub fn parse_input(input: String) -> Vec<Equation> {
     input
@@ -8,7 +8,7 @@ pub fn parse_input(input: String) -> Vec<Equation> {
         .map(|line| {
             let mut parts = line.split(":").map(|x| x.trim());
             let result = parts.next().unwrap().parse().unwrap();
-            let operands: Vec<u64> = parts
+            let operands: Vec<i64> = parts
                 .next()
                 .unwrap()
                 .split_whitespace()
@@ -20,7 +20,7 @@ pub fn parse_input(input: String) -> Vec<Equation> {
         .collect()
 }
 
-pub fn sum_valid(operations: Vec<char>, input: &Vec<Equation>) -> u64 {
+pub fn sum_valid(operations: Vec<char>, input: &Vec<Equation>) -> i64 {
     let mut total_sum = 0;
     for (result, operands) in input {
         for operators in vec![operations.iter(); operands.len() - 1]
