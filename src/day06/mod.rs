@@ -32,8 +32,6 @@ pub struct GuardState {
 pub struct World {
     cells: Vec<Vec<Cell>>,
     guard: Option<GuardState>,
-    initial_guard: Option<GuardState>,
-    initial_cells: Vec<Vec<Cell>>,
 }
 
 impl World {
@@ -96,17 +94,8 @@ impl World {
         }
     }
 
-    pub fn reset(&mut self) {
-        self.cells = self.initial_cells.clone();
-        self.guard = self.initial_guard.clone();
-    }
-
     pub fn place_obstacle(&mut self, i: usize, j: usize) {
         self.cells[i][j] = Cell::Obstacle;
-    }
-
-    pub fn remove_obstacle(&mut self, i: usize, j: usize) {
-        self.cells[i][j] = Cell::Vacant;
     }
 
     pub fn play(&mut self) -> (Result, HashSet<(usize, usize)>) {
@@ -128,8 +117,8 @@ impl World {
     }
 }
 
-impl From<&str> for World {
-    fn from(input: &str) -> Self {
+impl From<String> for World {
+    fn from(input: String) -> Self {
         let mut guard = None;
 
         let cells: Vec<_> = input
@@ -162,73 +151,69 @@ impl From<&str> for World {
             })
             .collect();
 
-        Self {
-            initial_cells: cells.clone(),
-            cells,
-            initial_guard: guard.clone(),
-            guard,
-        }
+        Self { cells, guard }
     }
-}
-
-pub fn parse_input(input: String) -> World {
-    input.as_str().into()
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::util::parse as util_parse;
+    use crate::util::parse_input as util_parse;
+    use rayon::prelude::*;
 
     #[test]
     fn test_example_part1() {
-        let mut world = util_parse::<World>("day06", "example.txt", parse_input);
+        let mut world = util_parse::<World>("day06", "example.txt");
         let (_, visited) = world.play();
         assert_eq!(visited.len(), 41);
     }
 
     #[test]
     fn test_part1() {
-        let mut world = util_parse::<World>("day06", "puzzle.txt", parse_input);
+        let mut world = util_parse::<World>("day06", "puzzle.txt");
         let (_, visited) = world.play();
         assert_eq!(visited.len(), 5551);
     }
 
     #[test]
     fn test_example_part2() {
-        let mut world = util_parse::<World>("day06", "example.txt", parse_input);
+        let mut world = util_parse::<World>("day06", "example.txt");
+        let inner_world = world.clone();
         let (_, visited) = world.play();
-        let mut obstacle_pos = HashSet::default();
-        for (i, j) in visited.iter() {
-            world.reset();
-            world.place_obstacle(*i, *j);
 
+        let result = visited.par_iter().map(|(i, j)| {
+            let mut world = inner_world.clone();
+            world.place_obstacle(*i, *j);
             let (result, _) = world.play();
             if result == Result::Loop {
-                obstacle_pos.insert((*i, *j));
+                return Some((*i, *j));
             }
-            world.remove_obstacle(*i, *j);
-        }
 
+            None
+        });
+
+        let obstacle_pos: HashSet<(usize, usize)> = result.flatten().collect();
         assert_eq!(obstacle_pos.len(), 6);
     }
 
     #[test]
     fn test_part2() {
-        let mut world = util_parse::<World>("day06", "puzzle.txt", parse_input);
+        let mut world = util_parse::<World>("day06", "puzzle.txt");
+        let inner_world = world.clone();
         let (_, visited) = world.play();
-        let mut obstacle_pos = HashSet::default();
-        for (i, j) in visited.iter() {
-            world.reset();
-            world.place_obstacle(*i, *j);
 
+        let result = visited.par_iter().map(|(i, j)| {
+            let mut world = inner_world.clone();
+            world.place_obstacle(*i, *j);
             let (result, _) = world.play();
             if result == Result::Loop {
-                obstacle_pos.insert((*i, *j));
+                return Some((*i, *j));
             }
-            world.remove_obstacle(*i, *j);
-        }
 
+            None
+        });
+
+        let obstacle_pos: HashSet<(usize, usize)> = result.flatten().collect();
         assert_eq!(obstacle_pos.len(), 1939);
     }
 }
