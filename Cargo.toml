@@ -8,5 +8,10 @@ ahash = "0.8.11"
 pathdiff = "0.2.3"
 regex = "1.11.1"
 
+[[bin]]
+name = "generate"
+path = "bin/generate/main.rs"
+
+
 [profile.test]
 inherits = "release"
