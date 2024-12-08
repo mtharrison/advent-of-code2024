@@ -14,5 +14,6 @@ regex = "1.11.1"
 name = "generate"
 path = "bin/generate/main.rs"
 
-[profile.test]
-inherits = "release"
+# uncomment to enable release profile for faster tests
+# [profile.test]
+# inherits = "release"
