@@ -12,6 +12,10 @@ impl<T> Grid<T> {
         self.data.len() / self.width
     }
 
+    pub fn width(&self) -> usize {
+        self.width
+    }
+
     pub fn len(&self) -> usize {
         self.data.len()
     }
@@ -116,6 +120,31 @@ impl<T> Grid<T> {
             }
         }
         grids
+    }
+
+    pub fn neighbours(&self, pos: (usize, usize)) -> Vec<(usize, usize)> {
+        let mut neighbours = Vec::new();
+        let (row, col) = pos;
+        let height = self.height();
+        let width = self.width();
+
+        if col < width - 1 {
+            neighbours.push((row, col + 1));
+        }
+
+        if col > 0 {
+            neighbours.push((row, col - 1));
+        }
+
+        if row < height - 1 {
+            neighbours.push((row + 1, col));
+        }
+
+        if row > 0 {
+            neighbours.push((row - 1, col));
+        }
+
+        neighbours
     }
 }
 
