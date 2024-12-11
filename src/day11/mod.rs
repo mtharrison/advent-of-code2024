@@ -60,6 +60,11 @@ pub fn blink_recursive_count(
     lhs + blink_recursive_count(rest, n, hashmap)
 }
 
+pub fn blink_count(input: Vec<i64>, n: usize) -> usize {
+    let mut hashmap: HashMap<(i64, usize), usize> = HashMap::new();
+    blink_recursive_count(input, n, &mut hashmap)
+}
+
 pub fn parse_input(input: String) -> Vec<i64> {
     input
         .split_whitespace()
@@ -69,32 +74,27 @@ pub fn parse_input(input: String) -> Vec<i64> {
 
 #[cfg(test)]
 mod tests {
-    use std::collections::HashMap;
-
     use super::*;
     use crate::util::parse as util_parse;
 
     #[test]
     fn test_example_part1() {
         let input = util_parse::<Vec<i64>>("day11", "example.txt", parse_input);
-        let mut hashmap: HashMap<(i64, usize), usize> = HashMap::new();
-        let count = blink_recursive_count(input, 25, &mut hashmap);
+        let count = blink_count(input, 25);
         assert_eq!(count, 55312);
     }
 
     #[test]
     fn test_part1() {
         let input = util_parse::<Vec<i64>>("day11", "puzzle.txt", parse_input);
-        let mut hashmap: HashMap<(i64, usize), usize> = HashMap::new();
-        let count = blink_recursive_count(input, 25, &mut hashmap);
+        let count = blink_count(input, 25);
         assert_eq!(count, 233050);
     }
 
     #[test]
     fn test_part2() {
         let input = util_parse::<Vec<i64>>("day11", "puzzle.txt", parse_input);
-        let mut hashmap: HashMap<(i64, usize), usize> = HashMap::new();
-        let count = blink_recursive_count(input, 75, &mut hashmap);
+        let count = blink_count(input, 75);
         assert_eq!(count, 276661131175807);
     }
 }
