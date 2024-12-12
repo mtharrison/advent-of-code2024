@@ -1,3 +1,11 @@
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum Direction {
+    Up,
+    Right,
+    Down,
+    Left,
+}
+
 pub struct Grid<T> {
     data: Vec<T>,
     width: usize,
@@ -20,11 +28,11 @@ impl<T> Grid<T> {
         self.data.len()
     }
 
-    pub fn get(&self, x: usize, y: usize) -> Option<&T> {
-        if x >= self.width || y >= self.data.len() / self.width {
+    pub fn get(&self, col: usize, row: usize) -> Option<&T> {
+        if col >= self.width || row >= self.height() {
             None
         } else {
-            Some(&self.data[y * self.width + x])
+            Some(&self.data[row * self.width + col])
         }
     }
 
@@ -41,9 +49,9 @@ impl<T> Grid<T> {
         T: Clone,
     {
         (0..self.width)
-            .map(|x| {
+            .map(|col| {
                 (0..self.height())
-                    .map(|y| self.get(x, y).unwrap().clone())
+                    .map(|row| self.get(col, row).unwrap().clone())
                     .collect()
             })
             .collect()
@@ -124,24 +132,68 @@ impl<T> Grid<T> {
 
     pub fn neighbours(&self, pos: (usize, usize)) -> Vec<(usize, usize)> {
         let mut neighbours = Vec::new();
-        let (row, col) = pos;
+        let (col, row) = pos;
         let height = self.height();
         let width = self.width();
 
-        if col < width - 1 {
-            neighbours.push((row, col + 1));
+        if row > 0 {
+            // Up
+            neighbours.push((col, row - 1));
         }
 
-        if col > 0 {
-            neighbours.push((row, col - 1));
+        if col < width - 1 {
+            // Right
+            neighbours.push((col + 1, row));
         }
 
         if row < height - 1 {
-            neighbours.push((row + 1, col));
+            // Down
+            neighbours.push((col, row + 1));
         }
 
+        if col > 0 {
+            // Left
+            neighbours.push((col - 1, row));
+        }
+
+        neighbours
+    }
+
+    pub fn neighbours_with_dir(
+        &self,
+        pos: (usize, usize),
+    ) -> Vec<(Option<(usize, usize)>, Direction)> {
+        let mut neighbours = Vec::new();
+        let (col, row) = pos;
+        let height = self.height();
+        let width = self.width();
+
         if row > 0 {
-            neighbours.push((row - 1, col));
+            // Up
+            neighbours.push((Some((col, row - 1)), Direction::Up));
+        } else {
+            neighbours.push((None, Direction::Up));
+        }
+
+        if col < width - 1 {
+            // Right
+            neighbours.push((Some((col + 1, row)), Direction::Right));
+        } else {
+            neighbours.push((None, Direction::Right));
+        }
+
+        if row < height - 1 {
+            // Down
+            neighbours.push((Some((col, row + 1)), Direction::Down));
+        } else {
+            neighbours.push((None, Direction::Down));
+        }
+
+        if col > 0 {
+            // Left
+            neighbours.push((Some((col - 1, row)), Direction::Left));
+        } else {
+            neighbours.push((None, Direction::Left));
         }
 
         neighbours
@@ -150,9 +202,9 @@ impl<T> Grid<T> {
 
 impl std::fmt::Display for Grid<char> {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        for y in 0..self.height() {
-            for x in 0..self.width {
-                write!(f, "{}", self.get(x, y).unwrap())?;
+        for row in 0..self.height() {
+            for col in 0..self.width {
+                write!(f, "{}", self.get(col, row).unwrap())?;
             }
             writeln!(f)?;
         }
@@ -275,5 +327,51 @@ mod tests {
         assert_eq!(grids[1].data, vec!['2', '3', '5', '6']);
         assert_eq!(grids[2].data, vec!['4', '5', '7', '8']);
         assert_eq!(grids[3].data, vec!['5', '6', '8', '9']);
+    }
+
+    #[test]
+    fn test_neighbours() {
+        let grid: Grid<char> = Grid::from(
+            r"
+          123
+          456
+          789
+        "
+            .to_string(),
+        );
+        let neighbours: Vec<(usize, usize)> = grid.neighbours((0, 0));
+        let neighbour_vals = neighbours
+            .iter()
+            .map(|(col, row)| ((*col, *row), *grid.get(*col, *row).unwrap()))
+            .collect::<Vec<_>>();
+
+        assert_eq!(neighbour_vals, vec![((1, 0), '2'), ((0, 1), '4')]);
+    }
+
+    #[test]
+    fn test_neighbours_with_dir() {
+        let grid: Grid<char> = Grid::from(
+            r"
+          123
+          456
+          789
+        "
+            .to_string(),
+        );
+        let neighbours: Vec<(Option<(usize, usize)>, Direction)> = grid.neighbours_with_dir((0, 0));
+        let neighbour_vals = neighbours
+            .iter()
+            .map(|(pos, dir)| (pos, dir))
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            neighbour_vals,
+            vec![
+                (&None, &Direction::Up),
+                (&Some((1, 0)), &Direction::Right),
+                (&Some((0, 1)), &Direction::Down),
+                (&None, &Direction::Left),
+            ]
+        );
     }
 }
