@@ -33,7 +33,7 @@ pub fn parse_input(input: String) -> (Vec<Edge>, Vec<Path>) {
     (rules, paths)
 }
 
-pub fn valid_path(rules: &Vec<Edge>, path: &Path) -> bool {
+pub fn valid_path(rules: &[Edge], path: &Path) -> bool {
     for i in 0..path.len() - 1 {
         let (l, r) = (path[i], path[i + 1]);
         match rules.iter().find(|(a, b)| (*a == l && *b == r)) {
@@ -46,7 +46,7 @@ pub fn valid_path(rules: &Vec<Edge>, path: &Path) -> bool {
 
 // We cannot construct a DAG from the full set of edges,
 // however we can from the relevant subset for a path
-pub fn pick_edges(rules: &Vec<Edge>, path: &Path) -> Vec<Edge> {
+pub fn pick_edges(rules: &[Edge], path: &Path) -> Vec<Edge> {
     let mut relevant = vec![];
     for rule in rules.iter() {
         if path.contains(&rule.0) && path.contains(&rule.1) {

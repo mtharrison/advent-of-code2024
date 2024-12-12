@@ -28,6 +28,10 @@ impl<T> Grid<T> {
         self.data.len()
     }
 
+    pub fn is_empty(&self) -> bool {
+        self.data.is_empty()
+    }
+
     pub fn get(&self, col: usize, row: usize) -> Option<&T> {
         if col >= self.width || row >= self.height() {
             None

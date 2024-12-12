@@ -70,7 +70,7 @@ pub fn find_regions(grid: &Grid<char>) -> Vec<Region> {
     regions
 }
 
-pub fn price_regions_by_edges(regions: &Vec<Region>) -> usize {
+pub fn price_regions_by_edges(regions: &[Region]) -> usize {
     regions
         .iter()
         .map(|(plots, edges)| plots * edges.len())
@@ -80,7 +80,7 @@ pub fn price_regions_by_edges(regions: &Vec<Region>) -> usize {
 // Insight here is that the number of sides is equal to the number of vertices
 // and the number of vertices is equal to the number of right angles,
 // which in turn is equal to the number of edges which have an edge at right angles
-pub fn price_regions_by_sides(regions: &Vec<Region>) -> usize {
+pub fn price_regions_by_sides(regions: &[Region]) -> usize {
     regions
         .iter()
         .map(|(plots, edges)| {
