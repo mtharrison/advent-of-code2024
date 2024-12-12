@@ -32,7 +32,7 @@ impl Graph {
             in_degree.entry(*node).or_default();
         }
 
-        for (_, neighbors) in &self.adjacency_list {
+        for neighbors in self.adjacency_list.values() {
             for &neighbor in neighbors {
                 *in_degree.entry(neighbor).or_default() += 1;
             }

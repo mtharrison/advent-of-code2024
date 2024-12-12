@@ -1,7 +1,7 @@
 pub fn load_file(day: &str, filename: &str) -> String {
     let path = format!("src/{}/inputs/{}", day, filename);
-    let contents = std::fs::read_to_string(path).expect("Failed to read input file");
-    contents
+    
+    std::fs::read_to_string(path).expect("Failed to read input file")
 }
 
 pub fn parse<T>(day: &str, filename: &str, parse: impl Fn(String) -> T) -> T {

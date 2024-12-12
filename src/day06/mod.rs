@@ -36,61 +36,58 @@ pub struct World {
 
 impl World {
     pub fn step(&mut self) {
-        match self.guard {
-            Some(ref mut guard) => {
-                let (i, j) = guard.position;
-                let direction = guard.direction;
+        if let Some(ref mut guard) = self.guard {
+            let (i, j) = guard.position;
+            let direction = guard.direction;
 
-                let (i_next, j_next) = {
-                    let i = i as isize;
-                    let j = j as isize;
-                    match direction {
-                        Direction::Up => (i - 1, j),
-                        Direction::Down => (i + 1, j),
-                        Direction::Left => (i, j - 1),
-                        Direction::Right => (i, j + 1),
-                    }
-                };
-
-                if i_next < 0
-                    || i_next >= self.cells.len() as isize
-                    || j_next < 0
-                    || j_next >= self.cells[0].len() as isize
-                {
-                    self.cells[i][j] = Cell::Visited;
-                    self.guard = None;
-                    return;
+            let (i_next, j_next) = {
+                let i = i as isize;
+                let j = j as isize;
+                match direction {
+                    Direction::Up => (i - 1, j),
+                    Direction::Down => (i + 1, j),
+                    Direction::Left => (i, j - 1),
+                    Direction::Right => (i, j + 1),
                 }
+            };
 
-                let (i_next, j_next) = (i_next as usize, j_next as usize);
-                let next_cell = &self.cells[i_next][j_next];
-
-                match next_cell {
-                    Cell::Vacant | Cell::Visited => {
-                        self.cells[i][j] = Cell::Visited;
-                        self.cells[i_next][j_next] = Cell::Guard;
-                        self.guard = Some(GuardState {
-                            position: (i_next, j_next),
-                            direction,
-                        });
-                    }
-                    Cell::Obstacle => {
-                        let new_direction = match direction {
-                            Direction::Up => Direction::Right,
-                            Direction::Right => Direction::Down,
-                            Direction::Down => Direction::Left,
-                            Direction::Left => Direction::Up,
-                        };
-                        self.guard = Some(GuardState {
-                            position: (i, j),
-                            direction: new_direction,
-                        });
-                        self.cells[i][j] = Cell::Guard;
-                    }
-                    _ => panic!("Invalid cell"),
-                }
+            if i_next < 0
+                || i_next >= self.cells.len() as isize
+                || j_next < 0
+                || j_next >= self.cells[0].len() as isize
+            {
+                self.cells[i][j] = Cell::Visited;
+                self.guard = None;
+                return;
             }
-            None => {}
+
+            let (i_next, j_next) = (i_next as usize, j_next as usize);
+            let next_cell = &self.cells[i_next][j_next];
+
+            match next_cell {
+                Cell::Vacant | Cell::Visited => {
+                    self.cells[i][j] = Cell::Visited;
+                    self.cells[i_next][j_next] = Cell::Guard;
+                    self.guard = Some(GuardState {
+                        position: (i_next, j_next),
+                        direction,
+                    });
+                }
+                Cell::Obstacle => {
+                    let new_direction = match direction {
+                        Direction::Up => Direction::Right,
+                        Direction::Right => Direction::Down,
+                        Direction::Down => Direction::Left,
+                        Direction::Left => Direction::Up,
+                    };
+                    self.guard = Some(GuardState {
+                        position: (i, j),
+                        direction: new_direction,
+                    });
+                    self.cells[i][j] = Cell::Guard;
+                }
+                _ => panic!("Invalid cell"),
+            }
         }
     }
 

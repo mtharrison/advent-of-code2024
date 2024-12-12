@@ -43,7 +43,7 @@ pub fn blink_recursive_count(
     n: usize,
     hashmap: &mut HashMap<(i64, usize), usize>,
 ) -> usize {
-    if n == 0 || input.len() == 0 {
+    if n == 0 || input.is_empty() {
         return input.len();
     }
 

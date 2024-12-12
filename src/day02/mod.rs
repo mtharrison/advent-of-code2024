@@ -13,7 +13,7 @@ pub fn parse_input(input: String) -> Vec<Vec<i32>> {
 pub fn is_safe(report: Vec<i32>, tolerance: bool) -> bool {
     for i in 0..report.len() - 1 {
         let diff = report[i + 1] - report[i];
-        if diff < 1 || diff > 3 {
+        if !(1..=3).contains(&diff) {
             if !tolerance {
                 return false;
             }

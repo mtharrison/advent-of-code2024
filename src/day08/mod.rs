@@ -78,11 +78,11 @@ pub fn parse_input(input: String) -> (Vec<CellTower>, (usize, usize)) {
     let towers = input
         .lines()
         .enumerate()
-        .map(|(i, line)| {
+        .flat_map(|(i, line)| {
             height = i;
             line.chars()
                 .enumerate()
-                .map(|(j, c)| {
+                .filter_map(|(j, c)| {
                     width = j;
                     match c {
                         '.' | '#' => None,
@@ -92,10 +92,8 @@ pub fn parse_input(input: String) -> (Vec<CellTower>, (usize, usize)) {
                         }),
                     }
                 })
-                .flatten()
                 .collect::<Vec<_>>()
         })
-        .flatten()
         .collect();
 
     (towers, (width + 1, height + 1))

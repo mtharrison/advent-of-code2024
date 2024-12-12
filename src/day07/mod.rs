@@ -49,7 +49,7 @@ pub fn sum_valid(operations: Vec<char>, input: &Vec<Equation>) -> i64 {
                 }
             }
 
-            return 0;
+            0
         })
         .sum();
 

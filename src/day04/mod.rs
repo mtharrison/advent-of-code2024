@@ -1,7 +1,7 @@
 use crate::grid::Grid;
 
 pub fn is_xmas_grid(grid: &Grid<char>) -> bool {
-    let lines = vec![vec![(0, 0), (1, 1), (2, 2)], vec![(2, 0), (1, 1), (0, 2)]];
+    let lines = [vec![(0, 0), (1, 1), (2, 2)], vec![(2, 0), (1, 1), (0, 2)]];
 
     let strings = lines
         .iter()
@@ -23,7 +23,7 @@ mod tests {
 
     #[test]
     fn test_example_part1() {
-        let grid = util_parse::<Grid<char>>("day04", "example.txt", |s| Grid::from(s));
+        let grid = util_parse::<Grid<char>>("day04", "example.txt", Grid::from);
         let mut counter = 0;
         let searches = Vec::from([grid.rows(), grid.columns(), grid.diagonals()]);
         let searches = searches.iter().flatten();
@@ -39,7 +39,7 @@ mod tests {
 
     #[test]
     fn test_part1() {
-        let grid = util_parse::<Grid<char>>("day04", "puzzle.txt", |s| Grid::from(s));
+        let grid = util_parse::<Grid<char>>("day04", "puzzle.txt", Grid::from);
         let mut counter = 0;
         let searches = Vec::from([grid.rows(), grid.columns(), grid.diagonals()]);
         let searches = searches.iter().flatten();
@@ -55,7 +55,7 @@ mod tests {
 
     #[test]
     fn test_example_part2() {
-        let grid = util_parse::<Grid<char>>("day04", "example2.txt", |s| Grid::from(s));
+        let grid = util_parse::<Grid<char>>("day04", "example2.txt", Grid::from);
         let mut counter = 0;
         for square in grid.squares(3) {
             if is_xmas_grid(&square) {
@@ -68,7 +68,7 @@ mod tests {
 
     #[test]
     fn test_part2() {
-        let grid = util_parse::<Grid<char>>("day04", "puzzle.txt", |s| Grid::from(s));
+        let grid = util_parse::<Grid<char>>("day04", "puzzle.txt", Grid::from);
         let mut counter = 0;
         for square in grid.squares(3) {
             if is_xmas_grid(&square) {
