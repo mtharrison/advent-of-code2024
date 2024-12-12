@@ -1,14 +1,4 @@
-pub fn parse_input(input: String) -> Vec<Vec<i32>> {
-    let mut result = Vec::new();
-    for line in input.lines() {
-        let parts: Vec<i32> = line
-            .split_whitespace()
-            .map(|x| x.parse().unwrap())
-            .collect();
-        result.push(parts);
-    }
-    result
-}
+use crate::util::parse_input_day02 as parse_input;
 
 pub fn is_safe(report: Vec<i32>, tolerance: bool) -> bool {
     for i in 0..report.len() - 1 {

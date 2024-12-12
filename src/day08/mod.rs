@@ -1,5 +1,6 @@
 use crate::vec2d::Vec2d;
 use itertools::Itertools;
+use crate::util::parse_input_day08 as parse_input;
 
 pub struct CellTower {
     pos: Vec2d,
@@ -69,34 +70,6 @@ pub fn find_antinodes_pt2(towers: Vec<CellTower>, dims: (usize, usize)) -> Vec<V
         .flatten()
         .filter(|x| !out_of_bounds(x, &dims))
         .collect::<Vec<_>>()
-}
-
-pub fn parse_input(input: String) -> (Vec<CellTower>, (usize, usize)) {
-    let mut width = 0;
-    let mut height = 0;
-
-    let towers = input
-        .lines()
-        .enumerate()
-        .flat_map(|(i, line)| {
-            height = i;
-            line.chars()
-                .enumerate()
-                .filter_map(|(j, c)| {
-                    width = j;
-                    match c {
-                        '.' | '#' => None,
-                        _ => Some(CellTower {
-                            pos: Vec2d::new(j as i32, i as i32),
-                            freq: c,
-                        }),
-                    }
-                })
-                .collect::<Vec<_>>()
-        })
-        .collect();
-
-    (towers, (width + 1, height + 1))
 }
 
 #[cfg(test)]

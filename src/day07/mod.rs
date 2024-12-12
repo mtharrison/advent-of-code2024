@@ -1,25 +1,8 @@
 use itertools::Itertools;
 use rayon::prelude::*;
+use crate::util::parse_input_day07 as parse_input;
 
 type Equation = (i64, Vec<i64>);
-
-pub fn parse_input(input: String) -> Vec<Equation> {
-    input
-        .lines()
-        .map(|line| {
-            let mut parts = line.split(":").map(|x| x.trim());
-            let result = parts.next().unwrap().parse().unwrap();
-            let operands: Vec<i64> = parts
-                .next()
-                .unwrap()
-                .split_whitespace()
-                .map(|x| x.parse().unwrap())
-                .collect();
-
-            (result, operands)
-        })
-        .collect()
-}
 
 pub fn sum_valid(operations: Vec<char>, input: &Vec<Equation>) -> i64 {
     let total_sum = input

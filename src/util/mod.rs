@@ -14,6 +14,112 @@ pub fn parse_input<T: From<String>>(day: &str, filename: &str) -> T {
     contents.into()
 }
 
+pub fn parse_input_day01(input: String) -> (Vec<i32>, Vec<i32>) {
+    let mut lhs = Vec::new();
+    let mut rhs = Vec::new();
+
+    for line in input.lines() {
+        let parts: Vec<i32> = line
+            .split_whitespace()
+            .map(|x| x.parse().unwrap())
+            .collect();
+        lhs.push(parts[0]);
+        rhs.push(parts[1]);
+    }
+
+    (lhs, rhs)
+}
+
+pub fn parse_input_day02(input: String) -> Vec<Vec<i32>> {
+    let mut result = Vec::new();
+    for line in input.lines() {
+        let parts: Vec<i32> = line
+            .split_whitespace()
+            .map(|x| x.parse().unwrap())
+            .collect();
+        result.push(parts);
+    }
+    result
+}
+
+pub fn parse_input_day05(input: String) -> (Vec<(i32, i32)>, Vec<Vec<i32>>) {
+    let (part1, part2) = {
+        let parts = input.split("\n\n").collect::<Vec<&str>>();
+        (parts[0], parts[1])
+    };
+
+    let mut rules = Vec::new();
+
+    for line in part1.lines() {
+        let (l, r) = {
+            let parts = line.split_once("|").unwrap();
+            (
+                parts.0.trim().parse::<i32>().unwrap(),
+                parts.1.trim().parse::<i32>().unwrap(),
+            )
+        };
+
+        rules.push((l, r));
+    }
+
+    let mut paths = vec![];
+    part2.lines().for_each(|line| {
+        let path = line
+            .split(",")
+            .map(|s| s.parse::<i32>().unwrap())
+            .collect::<Vec<i32>>();
+        paths.push(path);
+    });
+
+    (rules, paths)
+}
+
+pub fn parse_input_day07(input: String) -> Vec<(i64, Vec<i64>)> {
+    input
+        .lines()
+        .map(|line| {
+            let mut parts = line.split(":").map(|x| x.trim());
+            let result = parts.next().unwrap().parse().unwrap();
+            let operands: Vec<i64> = parts
+                .next()
+                .unwrap()
+                .split_whitespace()
+                .map(|x| x.parse().unwrap())
+                .collect();
+
+            (result, operands)
+        })
+        .collect()
+}
+
+pub fn parse_input_day08(input: String) -> (Vec<crate::day08::CellTower>, (usize, usize)) {
+    let mut width = 0;
+    let mut height = 0;
+
+    let towers = input
+        .lines()
+        .enumerate()
+        .flat_map(|(i, line)| {
+            height = i;
+            line.chars()
+                .enumerate()
+                .filter_map(|(j, c)| {
+                    width = j;
+                    match c {
+                        '.' | '#' => None,
+                        _ => Some(crate::day08::CellTower {
+                            pos: crate::vec2d::Vec2d::new(j as i32, i as i32),
+                            freq: c,
+                        }),
+                    }
+                })
+                .collect::<Vec<_>>()
+        })
+        .collect();
+
+    (towers, (width + 1, height + 1))
+}
+
 #[derive(Debug, PartialEq)]
 pub struct Point {
     x: i32,
