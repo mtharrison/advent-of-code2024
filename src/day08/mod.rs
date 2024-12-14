@@ -2,19 +2,19 @@ use crate::vec2d::Vec2d;
 use itertools::Itertools;
 
 pub struct CellTower {
-    pos: Vec2d,
+    pos: Vec2d<i32>,
     freq: char,
 }
 
-pub fn out_of_bounds(pos: &Vec2d, dims: &(usize, usize)) -> bool {
+pub fn out_of_bounds(pos: &Vec2d<i32>, dims: &(usize, usize)) -> bool {
     pos.x < 0 || pos.y < 0 || pos.x >= dims.0 as i32 || pos.y >= dims.1 as i32
 }
 
-pub fn antinodes_unique(antinodes: Vec<Vec2d>) -> usize {
+pub fn antinodes_unique(antinodes: Vec<Vec2d<i32>>) -> usize {
     antinodes.iter().unique().count()
 }
 
-pub fn find_antinodes_pt1(towers: Vec<CellTower>, dims: (usize, usize)) -> Vec<Vec2d> {
+pub fn find_antinodes_pt1(towers: Vec<CellTower>, dims: (usize, usize)) -> Vec<Vec2d<i32>> {
     towers
         .iter()
         .combinations(2)
@@ -37,7 +37,7 @@ pub fn find_antinodes_pt1(towers: Vec<CellTower>, dims: (usize, usize)) -> Vec<V
         .collect::<Vec<_>>()
 }
 
-pub fn find_antinodes_pt2(towers: Vec<CellTower>, dims: (usize, usize)) -> Vec<Vec2d> {
+pub fn find_antinodes_pt2(towers: Vec<CellTower>, dims: (usize, usize)) -> Vec<Vec2d<i32>> {
     towers
         .iter()
         .combinations(2)

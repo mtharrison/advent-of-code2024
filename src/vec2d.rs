@@ -1,22 +1,27 @@
+use std::ops::{Add, Sub};
+
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
-pub struct Vec2d {
-    pub x: i32,
-    pub y: i32,
+pub struct Vec2d<T> {
+    pub x: T,
+    pub y: T,
 }
 
-impl Vec2d {
-    pub fn new(x: i32, y: i32) -> Vec2d {
+impl<T> Vec2d<T>
+where
+    T: Add<Output = T> + Sub<Output = T> + Copy,
+{
+    pub fn new(x: T, y: T) -> Vec2d<T> {
         Vec2d { x, y }
     }
 
-    fn add_internal(&self, other: Vec2d) -> Vec2d {
+    fn add_internal(&self, other: Vec2d<T>) -> Vec2d<T> {
         Vec2d {
             x: self.x + other.x,
             y: self.y + other.y,
         }
     }
 
-    fn sub_internal(&self, other: Vec2d) -> Vec2d {
+    fn sub_internal(&self, other: Vec2d<T>) -> Vec2d<T> {
         Vec2d {
             x: self.x - other.x,
             y: self.y - other.y,
@@ -24,18 +29,24 @@ impl Vec2d {
     }
 }
 
-impl std::ops::Add for Vec2d {
-    type Output = Vec2d;
+impl<T> Add for Vec2d<T>
+where
+    T: Add<Output = T> + Sub<Output = T> + Copy,
+{
+    type Output = Vec2d<T>;
 
-    fn add(self, other: Vec2d) -> Vec2d {
+    fn add(self, other: Vec2d<T>) -> Vec2d<T> {
         self.add_internal(other)
     }
 }
 
-impl std::ops::Sub for Vec2d {
-    type Output = Vec2d;
+impl<T> Sub for Vec2d<T>
+where
+    T: Add<Output = T> + Sub<Output = T> + Copy,
+{
+    type Output = Vec2d<T>;
 
-    fn sub(self, other: Vec2d) -> Vec2d {
+    fn sub(self, other: Vec2d<T>) -> Vec2d<T> {
         self.sub_internal(other)
     }
 }
