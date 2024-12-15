@@ -18,6 +18,83 @@ impl Warehouse {
     pub fn new(grid: Grid<WarehouseCell>, robot_pos: Vec2d<i32>) -> Self {
         Warehouse { grid, robot_pos }
     }
+
+    pub fn step(&mut self, dir: Vec2d<i32>) {
+        let new_pos = self.robot_pos + dir;
+        let cell = self
+            .grid
+            .get(new_pos.x as usize, new_pos.y as usize)
+            .unwrap();
+        match cell {
+            WarehouseCell::Wall => (),
+            WarehouseCell::Vacant => {
+                self.grid.set(
+                    self.robot_pos.x as usize,
+                    self.robot_pos.y as usize,
+                    WarehouseCell::Vacant,
+                );
+                self.grid
+                    .set(new_pos.x as usize, new_pos.y as usize, WarehouseCell::Robot);
+                self.robot_pos = new_pos;
+            }
+            WarehouseCell::Box => {
+                let mut new_box_pos = new_pos;
+                loop {
+                    if new_box_pos.x < 0
+                        || new_box_pos.y < 0
+                        || new_box_pos.x >= self.grid.width() as i32
+                        || new_box_pos.y >= self.grid.height() as i32
+                    {
+                        break;
+                    }
+
+                    new_box_pos = new_box_pos + dir;
+                    let new_box_cell = self
+                        .grid
+                        .get(new_box_pos.x as usize, new_box_pos.y as usize)
+                        .unwrap();
+
+                    match new_box_cell {
+                        WarehouseCell::Wall => break,
+                        WarehouseCell::Vacant => {
+                            self.grid.set(
+                                self.robot_pos.x as usize,
+                                self.robot_pos.y as usize,
+                                WarehouseCell::Vacant,
+                            );
+                            self.grid.set(
+                                new_pos.x as usize,
+                                new_pos.y as usize,
+                                WarehouseCell::Robot,
+                            );
+                            self.grid.set(
+                                new_box_pos.x as usize,
+                                new_box_pos.y as usize,
+                                WarehouseCell::Box,
+                            );
+                            self.robot_pos = new_pos;
+                            break;
+                        }
+                        WarehouseCell::Box => (),
+                        WarehouseCell::Robot => unreachable!("Robot should not be in the way"),
+                    }
+                }
+            }
+            _ => panic!("Unexpected cell in warehouse"),
+        }
+    }
+
+    pub fn gps_score(&self) -> i32 {
+        let mut score = 0;
+        for row in 0..self.grid.height() {
+            for col in 0..self.grid.width() {
+                if let Some(WarehouseCell::Box) = self.grid.get(col, row) {
+                    score += (100 * row as i32) + col as i32;
+                }
+            }
+        }
+        score
+    }
 }
 
 impl std::fmt::Display for Grid<WarehouseCell> {
@@ -94,10 +171,22 @@ mod tests {
 
     #[test]
     fn test_example_part1() {
-        let (wh, moves) =
+        let (mut wh, moves) =
             util_parse::<(Warehouse, Instructions)>("day15", "example.txt", parse_input);
-        println!("Input: {}", wh.grid);
-        println!("Moves: {:?}", moves);
+        for m in moves {
+            wh.step(m);
+        }
+        assert_eq!(wh.gps_score(), 10092);
+    }
+
+    #[test]
+    fn test_part1() {
+        let (mut wh, moves) =
+            util_parse::<(Warehouse, Instructions)>("day15", "puzzle.txt", parse_input);
+        for m in moves {
+            wh.step(m);
+        }
+        assert_eq!(wh.gps_score(), 1495147);
     }
 
     // #[test]

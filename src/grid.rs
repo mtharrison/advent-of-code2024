@@ -40,6 +40,12 @@ impl<T> Grid<T> {
         }
     }
 
+    pub fn set(&mut self, col: usize, row: usize, value: T) {
+        if col < self.width && row < self.height() {
+            self.data[row * self.width + col] = value;
+        }
+    }
+
     pub fn rows(&self) -> Vec<Vec<T>>
     where
         T: Clone,
