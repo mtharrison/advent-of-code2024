@@ -1,5 +1,3 @@
-use std::collections::HashSet;
-
 use crate::{grid::Grid, vec2d::Vec2d};
 
 type Instructions = Vec<Vec2d<i32>>;
@@ -114,7 +112,6 @@ impl Warehouse {
 
     pub fn move_pushable_boxes_up_down(&mut self, pos: Vec2d<i32>, dir: Vec2d<i32>) {
         let boxes = self.get_pushable_boxes(pos, dir);
-        println!("Boxes: {:?}", boxes);
         if let None = boxes {
             return;
         }
@@ -358,7 +355,7 @@ pub fn parse_input(input: String) -> (Warehouse, Instructions) {
                     }
                     c => {
                         println!("Unexpected character in input: {}", c);
-                        panic!("dead");
+                        panic!();
                     }
                 })
                 .collect::<Vec<_>>()
@@ -411,16 +408,11 @@ mod tests {
     #[test]
     fn test_example_part2() {
         let (mut wh, moves) =
-            util_parse::<(Warehouse, Instructions)>("day15", "example2.txt", parse_input);
-
-        // wh.upscale();/
-
+            util_parse::<(Warehouse, Instructions)>("day15", "example.txt", parse_input);
+        wh.upscale();
         for m in moves {
-            println!("{}", wh.grid);
             wh.step(m);
         }
-
-        println!("{}", wh.grid);
         assert_eq!(wh.gps_score(), 9021);
     }
 
@@ -432,13 +424,6 @@ mod tests {
         for m in moves {
             wh.step(m);
         }
-
-        assert_eq!(wh.gps_score(), 1477235);
+        assert_eq!(wh.gps_score(), 1524905);
     }
-
-    // #[test]
-    // fn test_part_1() {
-    //     let input = util_parse::<String>("day15", "puzzle.txt", parse_input);
-    //     println!("Input: {}", input);
-    // }
 }
