@@ -61,7 +61,7 @@ impl Map {
 
     pub fn safety_factor(&self) -> i64 {
         let quad_counts = self.count_quadrants();
-        quad_counts.iter().fold(1, |acc, x| acc * x)
+        quad_counts.iter().product::<i64>()
     }
 
     pub fn as_grid(&self) -> Grid<char> {
@@ -99,10 +99,7 @@ impl Display for Map {
         let mut grid = vec![vec!['.'; self.width as usize]; self.height as usize];
         for robot in &self.robots {
             let curr = grid[robot.pos.y as usize][robot.pos.x as usize];
-            match curr {
-                '.' => grid[robot.pos.y as usize][robot.pos.x as usize] = '#',
-                _ => {}
-            }
+            if curr == '.' { grid[robot.pos.y as usize][robot.pos.x as usize] = '#' }
         }
 
         for row in grid {
@@ -114,11 +111,11 @@ impl Display for Map {
 }
 
 pub fn parse_input(input: String) -> Vec<Robot> {
-    let mut lines = input.lines();
+    let lines = input.lines();
     let mut robots = Vec::new();
     let re = Regex::new(r"p\=(?<x>\d+),(?<y>\d+) v\=(?<vx>-?\d+),(?<vy>-?\d+)").unwrap();
 
-    while let Some(line) = lines.next() {
+    for line in lines {
         let caps = re.captures(line).unwrap();
         let x = caps["x"].parse::<i64>().unwrap();
         let y = caps["y"].parse::<i64>().unwrap();

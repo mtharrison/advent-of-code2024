@@ -112,7 +112,7 @@ impl Warehouse {
 
     pub fn move_pushable_boxes_up_down(&mut self, pos: Vec2d<i32>, dir: Vec2d<i32>) {
         let boxes = self.get_pushable_boxes(pos, dir);
-        if let None = boxes {
+        if boxes.is_none() {
             return;
         }
 
