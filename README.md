@@ -1,5 +1,7 @@
 # 🦀🎄 Advent of Code 2024
 
+![build](https://github.com/mtharrison/advent-of-code2024/actions/workflows/rust.yml/badge.svg)
+
 <!---Results Table BEGIN-->
 
 ## Status
