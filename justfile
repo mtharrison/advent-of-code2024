@@ -1,5 +1,4 @@
-
-tmpdir := `mktemp -d`
-
-default:
-  echo "{{tmpdir}}"
+test:
+  cargo test
+readme:
+  cargo run --bin readme
