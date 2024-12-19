@@ -10,6 +10,8 @@ openai_api_rust = "0.1.9"
 pathdiff = "0.2.3"
 rayon = "1.10.0"
 regex = "1.11.1"
+reqwest = { version = "0.12.9", features = ["blocking"] }
+
 
 [[bin]]
 name = "generate"

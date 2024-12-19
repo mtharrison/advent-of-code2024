@@ -1,5 +1,9 @@
 use core::panic;
 use std::process::Command;
+use openai_api_rust::*;
+use openai_api_rust::chat::*;
+use openai_api_rust::completions::*;
+use reqwest;
 
 mod llm;
 use llm::get_day_description;
@@ -24,21 +28,40 @@ impl std::fmt::Display for TestStatus {
     }
 }
 
+fn get_day_title(day: usize) -> String {
+    let html = reqwest::blocking::get(&format!("https://adventofcode.com/2024/day/{}?/input", day))
+        .unwrap()
+        .text()
+        .unwrap();
+
+    if html.contains("Please don't repeatedly request this endpoint") {
+       return "🔒".to_string();
+    }
+
+    let re = regex::Regex::new(r"<h2>-+ Day \d+: (?<title>.*)\ -+<\/h2>").unwrap();
+    let captures = re.captures(&html).unwrap_or_else(|| {
+        panic!("Failed to parse title from: {}", html);
+    });
+    captures.name("title").unwrap().as_str().to_string()
+}
+
 #[derive(Debug)]
 struct Day {
     id: usize,
     name: String,
+    day_title: String,
     description: String,
     part1: TestStatus,
     part2: TestStatus,
 }
 
-fn get_statuses() -> Vec<Day> {
+fn get_statuses(openai: &OpenAI) -> Vec<Day> {
     let mut days = Vec::new();
     for i in 1..=25 {
         days.push(Day {
             id: i,
             name: format!("Day {}", i),
+            day_title: get_day_title(i),
             description: get_day_description(i),
             part1: TestStatus::Missing,
             part2: TestStatus::Missing,
@@ -130,15 +153,21 @@ fn get_time_for_test(day: usize, part: usize) -> f32 {
 
 fn day_to_string(day: &Day) -> String {
     format!(
-        "## [{}](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day{}/mod.rs)\n- Part 1: {}\n- Part 2: {}\n\n{}",
+        "## [{} - {}](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day{}/mod.rs)\n{}\n- Part 1: {}\n- Part 2: {}\n\n{}",
         day.name, 
+        day.day_title,
         format!("{:02}", day.id),
+        day.day_title,
         day.part1, day.part2, day.description,
     )
 }
 
 fn main() {
-    let days = get_statuses();
+    let auth = Auth::from_env().unwrap();
+    let openai = OpenAI::new(auth, "https://api.openai.com/v1/");
+
+
+    let days = get_statuses(&openai);
     let blocks = days
         .iter()
         .map(day_to_string)
