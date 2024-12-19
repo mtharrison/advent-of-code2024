@@ -71,7 +71,7 @@ fn get_day_description(day: usize) -> String {
         logit_bias: None,
         user: None,
         messages: vec![
-          Message { role: Role::System, content: "You will be given an advent of code puzzle description and my code to solve this puzzle in Rust. You must write a short but informative explanation of the approach that I took to solve the puzzle written in first person. Don't write any filler text or introduction such as stating the name of the puzzle or that it is in Rust. Just launch into the description of the approach".to_string() },
+          Message { role: Role::System, content: "You will be given an advent of code puzzle description and my code to solve this puzzle in Rust. You must write a very short (just 1 parageph) but informative explanation of the approach that I took to solve the puzzle written in first person. Don't write any filler text or introduction such as stating the name of the puzzle or that it is in Rust. Just launch into the description of the approach. It should be brief and technical and should focus on the choice of datastructures and algorithms. The parsing stage is not to be mentioned.".to_string() },
           Message { role: Role::User, content: format!("Puzzle description: {}\n\nMy code:\n{}", aoc_description, code) },
         ],
     };
