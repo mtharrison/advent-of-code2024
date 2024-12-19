@@ -9,232 +9,284 @@
 
 My solutions to [AOC 2024](https://adventofcode.com/2024/about) in [The Rust Programming Language](https://www.rust-lang.org/).
 
-<!---BEGIN-->
-## [Day 1 - Historian Hysteria](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day01/mod.rs)
-- Part 1: ⭐️ (<1ms)
-- Part 2: ⭐️ (<1ms)
+<!---DAY1_BEGIN-->
+## [⭐️⭐️ Day 1 - Historian Hysteria](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day01/mod.rs)
 
-I started by creating a function to parse the input, separating the location IDs into two vectors: `lhs` for the left list and `rhs` for the right list. I read the input line by line, splitting each line into its respective parts and converting them to integers.
+To solve the puzzle, I first created a function called `parse_input` to read the input data and separate it into two vectors, `lhs` and `rhs`. Each line of input contains two space-separated integers, which I split and parsed into integers, adding them to their respective vectors.
 
-Next, to compute the total distance, I implemented the `get_distance` function. This function first sorts both vectors to allow for direct pairing of the corresponding elements. Then, I iterated through the indices, calculating the absolute difference between each pair of values and accumulating the total distance.
+Next, I implemented the `get_distance` function. This function calculates the total distance between the two lists by first sorting both vectors. I then iterated through the sorted lists, computing the absolute difference between each pair of corresponding elements—one from `lhs` and one from `rhs`—and accumulated these differences to get the total distance.
 
-For the second part of the puzzle, I developed the `get_similarity` function, which tallies how often each number in the left list appears in the right list. For each unique number in `lhs`, I used the `filter` method to count its occurrences in `rhs`, multiplying this count by the number itself to contribute to the overall similarity score.
+Additionally, I created a `get_similarity` function to count how many times each unique number from the `lhs` appears in the `rhs` vector and sums the product of these counts multiplied by the number itself, which helps to determine the overall similarity score.
 
-Finally, in the test module, I wrote tests to validate both functions against example data and the actual input file, ensuring the correctness of my implementation. This systematic approach helped me efficiently reconcile the two lists, yielding the required total distances for the puzzle.
-## [Day 2 - Red-Nosed Reports](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day02/mod.rs)
-- Part 1: ⭐️ (<1ms)
-- Part 2: ⭐️ (<1ms)
+The main logic was tested through various unit tests that checked both the distance and similarity calculations against provided example data to ensure accuracy. Finally, I included test cases for the actual puzzle input to print out the results, providing a clear picture of my findings for both the distance and similarity between the lists.
 
-I started by defining a function `parse_input` that takes the raw input string and converts each line into a vector of integers, which represent the levels in each report. This provides a structured format for further analysis. 
 
-Next, I implemented the `is_safe` function, which checks if a specific report meets the safety criteria. It iterates through the report and calculates the difference between adjacent levels. If a difference falls outside the allowable range (1 to 3), I handle the situation based on the `tolerance` flag. If `tolerance` is false, the report is deemed unsafe. If true, I create clones of the vector with the problematic levels removed to check the safety of the adjusted reports recursively.
+<!---DAY1_END-->
 
-For broader checks, I created the `check_safe` function, which determines if a report is safe by checking the original order and the reverse order of levels. This ensures that all potential cases of increasing or decreasing sequences are considered.
+<!---DAY2_BEGIN-->
+## [⭐️⭐️ Day 2 - Red-Nosed Reports](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day02/mod.rs)
 
-Finally, I wrote a `count_safe` function that counts how many reports are safe by iterating over each report and using the `check_safe` function. This function initializes a count and aggregates results as it evaluates each report.
+I began by defining a function to parse the input data into a vector of integer vectors, where each inner vector represents a report's levels as integers. This facilitates easier manipulation of the data later on. 
 
-In the tests, I validated the implementation with example reports and then tested against the actual puzzle input, logging the safe report counts accordingly. This structured approach ensured that I systematically checked both safety criteria while accommodating varying levels of tolerance.
-## [Day 3 - Mull It Over](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day03/mod.rs)
-- Part 1: ⭐️ (<1ms)
-- Part 2: ⭐️ (<1ms)
+Next, I implemented the `is_safe` function, which determines if a specific report is safe based on two rules: the differences between adjacent levels must be between 1 and 3, and if required, the function attempts to remove up to two elements to maintain a potential safety while checking for conformity to the difference rule.
 
-I started by defining an `Instruction` enum to represent the different commands we need to handle, specifically the `Mul` operation along with `Do` and `Dont` for controlling execution. The `Machine` struct manages the execution context, including an accumulator to store the sum of the multiplication results.
+To encapsulate the potential for both increasing and decreasing sequences, I created the `check_safe` function. This function examines the report as is and also checks the report in reverse order by comparing it against an inverted version of itself.
 
-To extract the valid multiplication instructions from the corrupted input, I utilized a regular expression to find patterns that matched the `mul(X,Y)` format. This regex ensures that we accurately isolate valid multiplications while ignoring corrupt segments featuring invalid characters. 
+Finally, I developed the `count_safe` function, which iterates through all reports, utilizing the `check_safe` function to tally how many reports are deemed safe. For testing, I wrote unit tests to verify the implementation using both example cases and the real input.
 
-After extracting the instructions, I translated them into the enum types. For each valid `mul` instruction found, I parsed the two numbers and created a corresponding `Instruction::Mul` variant. For the `do()` and `don't()` commands, I handled them by updating the machine state to enable or disable instruction execution based on whether I wanted to evaluate those commands.
+Overall, this structured approach of parsing, checking safety and counting allowed me to effectively solve the problem while maintaining clarity and extensibility in the code.
 
-In the `run_program` method, I iteratively executed the extracted instructions. For each `Mul` instruction, if the machine is enabled, I updated the accumulator with the result of the multiplication. Finally, I returned the accumulated result after processing all valid instructions.
 
-The implementation also included tests for both the example cases and the actual puzzle input, ensuring that the results were as expected. This approach leads to a clear and effective solution, maintaining focus on the valid operations while navigating through the corrupted data.
-## [Day 4 - Ceres Search](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day04/mod.rs)
-- Part 1: ⭐️ (<1ms)
-- Part 2: ⭐️ (<1ms)
+<!---DAY2_END-->
 
-To solve the problem of counting the occurrences of the word "XMAS" in a grid, I took a systematic approach to search through various orientations of the word. First, I implemented a function that checks for the word in horizontal, vertical, and diagonal lines in the grid. The function collects strings corresponding to these orientations into a vector.
+<!---DAY3_BEGIN-->
+## [⭐️⭐️ Day 3 - Mull It Over](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day03/mod.rs)
 
-In my tests, I ran through the grid several times, transforming rows, columns, and diagonals into strings. For each string, I utilized the `matches` function to count instances of "XMAS" and its reverse "SAMX", as the word can appear in both configurations due to the nature of words being reversible in this search format.
+I approached the puzzle by designing a simple state machine to evaluate the instructions extracted from the corrupted memory. First, I created an `Instruction` enum to represent the valid operations: `Mul` for performing multiplications, and `Do` or `Dont` for controlling whether to execute multiplication instructions based on a flag.
 
-In addition to counting occurrences for the first part of the puzzle, I also designed the solution to capture additional checks in 3x3 squares for the second part. This involved iterating over the grid to extract sub-grids and applying the previous check. This way, I ensured that I counted both the individual occurrences of "XMAS" in various orientations as well as the specific patterns in smaller grid sections. Ultimately, I validated the solutions against example cases to confirm accuracy.
-## [Day 5 - Print Queue](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day05/mod.rs)
-- Part 1: ⭐️ (<1ms)
-- Part 2: ⭐️ (<1ms)
+To extract the valid multiplication instructions from the input string, I used a regular expression to match the `mul(X,Y)` pattern while ignoring any corrupted characters. I then iterated through these matches, parsing the numbers and creating a vector of `Instruction` instances.
 
-To solve the puzzle, I first parsed the input to separate the page ordering rules and the updates. I defined the `Edge` type to represent each order constraint, and the `Path` type to collect the pages in each update. For parsing, I split the input string into two parts based on double newlines, extracting the rules and paths accordingly.
+The `Machine` struct maintains the state of execution, including an accumulator to sum the multiplication results and a flag to control whether multiplications should be counted. I implemented an `execute` method to handle different instructions appropriately, updating the accumulator only when allowed.
 
-Next, I implemented the `valid_path` function to check if a given path adheres to the ordering rules. This function iterates through the pages in the path and verifies that each adjacent pair complies with the defined constraints by searching for matching rules in the list.
+Finally, the `run_program` function executes the list of instructions in sequence and returns the accumulated sum. I included unit tests to verify the correctness of the logic with example inputs, ensuring it behaves as expected for both part one and part two of the puzzle. Using this structured approach helped me systematically process the corrupted input and obtain the required results efficiently.
 
-To address the need for considering relevant rules for each update, I created the `pick_edges` function, which filters the rules to include only those applicable to the current path. This allows the construction of a subgraph based on the constraints that remain after considering the pages in that specific update.
 
-Finally, I computed the result for correctly-ordered updates by accumulating the middle page number from each valid path. For invalid paths, I constructed a graph from the relevant edges and applied topological sorting to find a valid order, again obtaining the middle page number. I ran tests for both the example input and the actual input, asserting the correctness of my implementations by checking against expected results.
-## [Day 6 - Guard Gallivant](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day06/mod.rs)
-- Part 1: ⭐️ (<1ms)
-- Part 2: ⭐️ 0.06s
+<!---DAY3_END-->
 
-I first defined the necessary enums and structs to represent the guard's state, the world, and the cells in the grid. The `Direction` enum encapsulated the possible directions the guard could face, while the `Cell` enum represented the types of cells in the world, including the guard, vacant spaces, obstacles, and visited positions. The `GuardState` struct kept track of the guard's current position and direction.
+<!---DAY4_BEGIN-->
+## [⭐️⭐️ Day 4 - Ceres Search](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day04/mod.rs)
 
-In the `World` struct, I implemented a method called `step()` to simulate the guard's movement based on the described rules. When the guard encounters an obstacle directly in front of it, I updated its direction by turning right. If the path was clear, the guard moved forward and marked the previous position as visited.
+To solve the problem, I first interpreted the word search as a grid of characters where I needed to identify the occurrences of the word "XMAS" in multiple orientations: horizontally, vertically, and diagonally, including backward directions. I created a function that processes the entire grid by extracting rows, columns, and diagonal strings. 
 
-The core of the simulation happened in the `play()` method, which maintained a loop where the guard continued to step until it either left the mapped area or entered a repeating situation (loop). I utilized a `HashSet` to track both positions visited and the guard's state (position and direction) to detect loops effectively.
+For counting occurrences, I utilized the `matches` method to count how many times "XMAS" and its reverse "SAMX" appeared in each extracted string. I looped through all possible search lines, collected them into a single counter, and checked the results against the expected values for both the example and the actual puzzle input.
 
-To initialize the world from the input string, I implemented the `From<String>` trait for the `World` struct. This allowed me to parse the input into a grid of cells, identifying the initial position and direction of the guard.
+Additionally, for part two of the puzzle, I examined smaller 3x3 squares of the grid to check if the specific pattern of "XMAS" could be formed. I crafted a helper function to verify a grid against the presence of this pattern, looping through the relevant sections and counting valid configurations. Each aspect was modularized to allow for easy testing, ensuring that both parts of the puzzle were addressed correctly.
 
-In the tests, I confirmed the correctness of my implementation using example inputs and the actual puzzle input, checking that the number of distinct positions visited matched the expected results. The modular structure and clear separation of concerns in the code facilitated easy maintenance and straightforward debugging.
-## [Day 7 - Bridge Repair](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day07/mod.rs)
-- Part 1: ⭐️ (<1ms)
-- Part 2: ⭐️ 0.09s
 
-I approached this puzzle by first parsing the input into a manageable format. Each line of input is transformed into a tuple consisting of a target result and a vector of operands. This allows for easy manipulation of the data later on.
+<!---DAY4_END-->
 
-To determine which equations could potentially be valid, I implemented a method that utilizes a parallel approach to evaluate all combinations of operators between the operands. I employed the `itertools` crate to generate all possible configurations of the operators (`+` and `*`) for the given operands. Since the number of operands can vary, this is handled dynamically based on the input.
+<!---DAY5_BEGIN-->
+## [⭐️⭐️ Day 5 - Print Queue](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day05/mod.rs)
 
-Inside the evaluation loop, I maintain an accumulator to apply the operations in a left-to-right manner, as specified. For each combination of operators, I check if the evaluated value matches the target result. If it does, the target result is added to a running total. This process is done in parallel for efficiency, leveraging the `rayon` library to handle concurrent computations across multiple threads.
+I started by creating a function `parse_input` to read and separate the page ordering rules from the update paths. I used string manipulation to split the input into two parts: the rules and the paths, then parsed each into a suitable format—`Vec<Edge>` for rules and `Vec<Path>` for the updates.
 
-Lastly, I run tests on both example inputs and actual inputs to ensure the implementation is correct and returns the expected sums of valid test values. The overall structure is designed to be efficient while adhering to the constraints of operator precedence and operand order.
-## [Day 8 - Resonant Collinearity](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day08/mod.rs)
-- Part 1: ⭐️ (<1ms)
-- Part 2: ⭐️ (<1ms)
+Next, I implemented the `valid_path` function to check if an update path complies with the given rules. For each path, I iterated through its elements, verifying that each pair of consecutive pages complies with the relevant rules by checking if they exist in the rules list.
 
-I approached the problem by first defining a structure, `CellTower`, to represent each antenna's position and frequency. I processed the input to gather these antennas while also calculating the map dimensions. To find the antinodes, I utilized combinations of pairs of antennas, filtering to ensure they shared the same frequency. 
+To optimize the process of validating paths, I created the `pick_edges` function to gather only the relevant rules for a given path, focusing on rules that involve pages present in the path. This filtered list allowed for efficient topological sorting when needed.
 
-In the `find_antinodes_pt1` function, I computed the positions of potential antinodes based on the relative distances of antennas, specifically looking for points that would be positioned at half the distance of one antenna from the other. I then filtered these positions to remove any that fell outside the defined map bounds.
+In the test functions, I accumulated the middle page numbers of valid paths by accessing the middle element of the correctly ordered paths and summing them up, first for the example input and then for the actual input.
 
-For the second part, `find_antinodes_pt2`, I extended this by generating antinode positions further away from each antenna until I hit the map edges, effectively capturing all possible valid antinodes from each antenna pair.
+For paths that weren't valid, I employed the `Graph` structure with a topological sort to determine a valid printing order, again retrieving the middle page from the sorted path.
 
-In both functions, I used a utility to collect unique antinode positions, ensuring I counted only distinct locations. Finally, I incorporated tests to validate the correctness of my functions against provided examples and my puzzle input, confirming the expected results for both parts of the challenge.
-## [Day 9 - Disk Fragmenter](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day09/mod.rs)
-- Part 1: ⭐️ (<1ms)
-- Part 2: ⭐️ 0.45s
+Finally, I compared the accumulated results with expected values using assertions to ensure the correctness of my approach.
 
-I approached the puzzle by creating a structured representation of the disk using a `DiskBlock` enum to differentiate between free space and file blocks. This allowed for a clear and understandable manipulation of the disk's state. I implemented a `Disk` struct to hold a vector of these blocks along with indices to track the first free space and the last block.
 
-To compact the files, I designed two methods: `defrag_simple` and `defrag_files`. The `defrag_simple` method performs a basic compaction by swapping blocks until all files are brought together in order, while ensuring free spaces are pushed to the end. `defrag_files` refines this by identifying the largest gaps and moving files from the end to the nearest available free space, preserving file order.
+<!---DAY5_END-->
 
-After compacting, I calculated the filesystem checksum by iterating through the blocks. For each block, if it contained a file, I multiplied its position by the corresponding file ID and summed these values.
+<!---DAY6_BEGIN-->
+## [⭐️⭐️ Day 6 - Guard Gallivant](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day06/mod.rs)
 
-In the parsing phase, I constructed the disk from a string representation of the input, alternating between file lengths and free space lengths. This ensured that the representation was accurate and straightforward for performing operations later.
+I implemented a simulation of the guard's patrol protocol by creating a grid-based world where each cell could represent the guard's current position, obstacles, or vacant spaces. I used an enumeration for directions (up, down, left, right) and modeled the guard's state with a structure containing its position and facing direction.
 
-Overall, my code effectively compacted the disk and computed the required checksum through structured data management and targeted algorithms for file movement.
-## [Day 10 - Hoof It](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day10/mod.rs)
-- Part 1: ⭐️ (<1ms)
-- Part 2: ⭐️ (<1ms)
+The core logic revolves around a `step` function, which handles the guard's movement following the defined protocol. Whenever the guard encounters an obstacle, it turns right and remains in its current position; otherwise, it moves forward. I tracked previously visited positions using a hash set to ensure that I counted only distinct cells. 
 
-I approached the puzzle by first defining a recursive function, `find_trails`, which explores the grid starting from a given position, looking for valid hiking trails that go from height 0 to height 9, increasing by exactly 1 at each step. This function employs a depth-first search strategy, utilizing a `HashSet` to track the reachable positions at height 9.
+When setting up the grid from input, I parsed the cells into the appropriate types and located the guard's initial position. During the simulation, if the guard moved outside the grid boundaries, I recorded the result and marked all visited positions before escaping. The final count of distinct positions was returned as the answer. 
 
-For calculating scores from trailheads, I created two distinct functions: `trailhead_score` and `trailhead_rating`. The `trailhead_score` function uses `find_trails` to count the number of reachable height 9 positions from trailheads at height 0, while the `trailhead_rating` function counts the distinct trails directly.
+This approach efficiently handles the simulation of the guard's patrol while keeping track of visited cells, allowing me to arrive at the solution to the puzzle effectively.
 
-The `map_score` function iterates over each cell in the grid, applying the score function to gather scores for all trailheads. I ensured the solution was efficient by reusing the grid data structure and processing the input in a structured manner. Finally, I validated the implementation with unit tests against provided examples and the actual puzzle input, confirming the expected outcomes.
-## [Day 11 - Plutonian Pebbles](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day11/mod.rs)
-- Part 1: ⭐️ (<1ms)
-- Part 2: ⭐️ 0.02s
 
-To solve the puzzle, I designed a system of rules governing how the stones change each time they blink. First, I implemented three rules as separate functions: 
+<!---DAY6_END-->
 
-1. The first rule replaces a stone with `0` by `1`.
-2. The second rule splits a stone with an even number of digits into two separate stones, while the third rule multiplies the stone's value by `2024` if neither of the other rules apply. 
+<!---DAY7_BEGIN-->
+## [⭐️⭐️ Day 7 - Bridge Repair](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day07/mod.rs)
 
-For the processing, I created an `apply_rules` function, which takes a stone's value and returns a vector of new stones based on the applicable rules. Next, I tackled the challenge of handling multiple iterations of blinking, which could lead to a substantial number of stones. I utilized a recursive function, `blink_recursive_count`, applying memoization via a `HashMap` to store the results of previous computations, thus optimizing the process and avoiding redundant calculations.
+To solve the puzzle, I started by parsing the input into a usable format, which consists of pairs of test values and their corresponding operands. Each line of the input presents an equation where the test value is separated from the operands by a colon. I used a tuple to represent each equation as a combination of the test value and a vector of integers.
 
-A helper function, `blink_count`, initializes this recursion by setting up the hashmap for tracking calculated values. Finally, I wrote a `parse_input` function to handle the input and convert it into the necessary format. My testing confirmed the solution against example and actual input, ensuring correctness across different scenarios.
-## [Day 12 - Garden Groups](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day12/mod.rs)
-- Part 1: ⭐️ 0.01s
-- Part 2: ⭐️ 0.01s
+The core of my approach is to check each equation systematically by generating all possible combinations of the operators `+` and `*` (and an additional operator `|` for part 2) between the operands. I utilized the `itertools` crate to employ the `multi_cartesian_product` function, which allows me to explore all combinations of operators for the given operands.
 
-I started by defining a structure to represent the edges and regions of the garden plots, encapsulating key information such as the number of plots and their edges as distinct data types. I then created a function to parse the input into a grid format.
+After setting up the operator combinations, I evaluated each equation in a left-to-right manner, as specified, keeping track of the accumulated value. If the computed value matches the test value of that equation, I add this test value to a running total.
 
-To identify the regions of plants, I used a depth-first search algorithm implemented via a stack. As I traversed the grid, I marked the visited plots and counted both the number of plots within a region and the edges contributing to its perimeter. I managed edges using a `HashSet` to avoid duplicates.
+The computations were parallelized using the `rayon` crate to improve performance, which is essential given the potentially large input sizes. Finally, I return the total sum of the valid test values from the equations that could hold true based on the applied operators, providing the solution efficiently while ensuring correctness through tests for both example and actual inputs.
 
-After gathering all regions, I computed the cost of fencing each region using two distinct pricing strategies. The first approach involves calculating the total price by multiplying the area of each region by the number of unique edges. In the second approach, I refined the edge counting to consider only the sides exposed to the outside, leveraging geometrical insights about the number of vertices. 
 
-Lastly, I thoroughly tested both parts of the puzzle to ensure correctness against the provided examples, validating that my calculations for total fencing prices aligned with expected results.
-## [Day 13 - Claw Contraption](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day13/mod.rs)
-- Part 1: ⭐️ 0.02s
-- Part 2: ⭐️ 0.02s
+<!---DAY7_END-->
 
-I approached the problem by defining a `ClawMachine` struct that encapsulates the movement costs and prize locations for each machine. I started by using regex to parse the machine behavior and prize coordinates from the input strings. This allows me to extract the movements associated with buttons A and B, as well as the prize's position.
+<!---DAY8_BEGIN-->
+## [⭐️⭐️ Day 8 - Resonant Collinearity](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day08/mod.rs)
 
-To determine the number of times each button needs to be pressed, I formulated a method to solve a set of linear equations based on the cost constraints of the buttons. Specifically, I used symbolic manipulation to derive the necessary counts of button presses that would align the claw over the prize coordinates, given a variable offset to account for potential adjustments.
+I approached the puzzle by creating a structured way to represent the antennas and calculate the unique locations of antinodes based on the frequencies emitted by these antennas. First, I defined a `CellTower` struct to hold the position and frequency of each antenna. The `parse_input` function reads the input data, identifying antennas from the characters in the grid, and records their positions while also determining the dimensions of the grid.
 
-In terms of cost computation, I defined a function to calculate the total token expenditure based on the button press counts returned by the equation solver. If a valid solution exists, the costs are summed; otherwise, it returns zero. 
+To find the antinodes, I created two separate functions: `find_antinodes_pt1` and `find_antinodes_pt2`. Both functions leverage combinations of antennas, which allows me to easily assess pairs of antennas that share the same frequency. For each pair, I calculated the directional offsets based on their positions, allowing me to determine potential antinode locations that are in line with the antennas.
 
-Finally, I parsed the input into a vector of `ClawMachine` instances and iterated over these to compute the total cost required to win as many prizes as possible, based on the solutions derived for pressing the buttons up to a maximum limit. This structured approach ensures that I efficiently find the optimal solutions for each machine while adhering to the specified constraints.
-## [Day 14 - Restroom Redoubt](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day14/mod.rs)
-- Part 1: ⭐️ (<1ms)
-- Part 2: ⭐️ 0.15s
+`find_antinodes_pt1` methodically identifies the unique antinode positions that are exactly twice the distance apart. I applied vector arithmetic to determine these positions while ensuring they remain within the valid grid bounds. This function collects the valid antinode locations and filters them to ensure they are unique using the `unique` method from the `itertools` library.
 
-I structured my solution around the concept of a `Robot` and a `Map` that holds multiple robots. The `Robot` struct contains its current position and velocity, both represented using a `Vec2d` for easy arithmetic operations. The `Map` struct tracks all robots and its dimensions.
+In `find_antinodes_pt2`, I extended the approach to compute all antinodes that can be generated from pairs of antennas by continuously adding directional offsets until reaching the grid boundaries. I repeated the filtering to ensure only valid positions are collected.
 
-To model the movements of robots over time efficiently, I implemented a `step` method that updates each robot's position based on its velocity while also applying the wrapping behavior at the edges of the map. I created a `step_n_times` function to allow for simulating the robot's movements over a specified number of seconds (in this case, 100).
+Ultimately, I used a dedicated `antinodes_unique` function to count the unique positions collected from either point calculation method, verifying both parts of the puzzle with appropriate tests. This structured approach allowed me to systematically address the requirements and verify correctness against the examples provided.
 
-After simulating the movements, I needed a method to analyze the robots' final positions by dividing the map into quadrants and counting the number of robots in each. The `count_quadrants` function categorizes robots into one of the four quadrants and increments their respective counts. To compute the safety factor, I multiplied the counts from all four quadrants together.
 
-For input parsing, I used a regular expression to extract the positions and velocities of robots from the puzzle input format. The `Grid` struct was also utilized to produce a visual representation of the robot positions.
+<!---DAY8_END-->
 
-Unit tests ensured that both the example and actual inputs produced the expected results, validating the correctness of my implementation.
-## [Day 15 - Warehouse Woes](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day15/mod.rs)
-- Part 1: ⭐️ (<1ms)
-- Part 2: ⭐️ (<1ms)
+<!---DAY9_BEGIN-->
+## [⭐️⭐️ Day 9 - Disk Fragmenter](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day09/mod.rs)
 
-I approached the problem by first defining the core data structures that represent the warehouse and its components. I created an enum `WarehouseCell` to represent different types of cells, such as walls, vacants, boxes, and the robot. The `Warehouse` struct encapsulates a grid of these cells along with the robot's position.
+I approached the puzzle by implementing a `Disk` struct to represent the disk blocks, consisting of both file blocks and free spaces. I started by parsing the input string into this structured format, where `DiskBlock` can either be a `Free` or a `File` with a specific identifier.
 
-To handle the robot's movements, I implemented a series of methods in the `Warehouse` struct. The `step` method checks the cell in front of the robot and determines how to move based on whether the next cell is empty, contains a box, or is a wall. If a pushable box is encountered, I recursively gather all boxes in the push direction using `get_pushable_boxes`, ensuring proper movement even when boxes are adjacent to each other.
+First, I created methods to identify and manage free regions and file blocks on the disk. The `defrag_simple` method efficiently relocates files leftward to fill gaps. It uses two pointers—`first_free_idx` to track the next free position and `last_block` to find the last occupied block. By swapping blocks, I ensure that all free space shifts towards the start.
 
-I incorporated distinct movement logic for vertical and horizontal pushes to account for the box types, which are treated as separate left and right halves. The method `move_pushable_boxes` orchestrates this process depending on the direction of movement.
+For a more advanced defragmentation, I implemented `defrag_files`. This method iterates through the files in reverse order based on their IDs, placing each file in the rightmost available space while maintaining their positions as compact as possible. I also updated the tracking of free regions dynamically to accommodate changes after each file's relocation.
 
-After processing all moves, I calculated the final score by defining the `gps_score` method, which sums GPS coordinates of boxes based on their positions within the grid. To parse the input data, I split it into the warehouse configuration and the movement instructions. The instructions were converted into vector movements representing their direction (up, down, left, right).
+After reorganizing the files, I calculated the checksum using the `checksum` method, which multiplies each block's position by its file ID and sums these products, skipping over free space blocks. This calculation gives the final value required for the solution of the puzzle.
 
-Finally, I implemented tests using example inputs to validate both the initial and upsized warehouse configurations, ensuring that the robot's movements and the resulting scores were computed correctly across various scenarios. This structured approach allowed me to effectively simulate the robot's behavior and accurately compute the desired sum of the boxes' GPS coordinates.
-## [Day 16 - Reindeer Maze](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day16/mod.rs)
-- Part 1: 
-- Part 2: 
+I tested my implementation against provided examples to ensure correctness before validating it against the actual input. This structured and methodical approach ensured I could efficiently manipulate the disk data and compute the correct filesystem checksum.
 
 
-## [Day 17 - Chronospatial Computer](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day17/mod.rs)
-- Part 1: 
-- Part 2: 
+<!---DAY9_END-->
 
+<!---DAY10_BEGIN-->
+## [⭐️⭐️ Day 10 - Hoof It](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day10/mod.rs)
 
-## [Day 18 - RAM Run](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day18/mod.rs)
-- Part 1: 
-- Part 2: 
+I approached the puzzle by modeling the topographic map as a grid and using depth-first search (DFS) to explore potential hiking trails. I defined a function `find_trails`, which recursively navigates adjacent grid positions to identify valid trails starting from a given trailhead (position with height 0). The trails must incrementally increase in height, and I maintained a set of reachable positions to avoid counting duplicates.
 
+I also implemented `distinct_trails` to count how many unique '9' positions could be reached from a trailhead using a similar DFS approach, focusing on counting rather than storing positions. The `trailhead_score` function determines the score for each trailhead by checking if its height is '0' and then using `find_trails` to calculate reachable positions.
 
-## [Day 19 - Linen Layout](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day19/mod.rs)
-- Part 1: ⭐️ 0.01s
-- Part 2: ⭐️ 0.01s
+To compute the overall score of the map, I created a `map_score` function that iterates through all grid positions, applying the specified scoring function (either `trailhead_score` or `trailhead_rating`). This approach efficiently combines recursive trail exploration with grid traversal to yield the required score summation from all applicable trailheads. Finally, I included tests to confirm the correctness of my implementation against provided examples.
 
-I approached the problem by implementing a dynamic programming solution to count the number of ways to form each design using the available towel patterns. I defined the function `num_ways`, which takes a design string and a list of patterns as input. Within this function, I initialized a memoization array, `memo`, where `memo[i]` stores the number of ways to create the substring of the design from the start up to the `i-th` character.
 
-As I iterated through each character of the design, I checked all possible substrings that end at the current position. For each substring, I checked if it exists in the set of available patterns using a `HashSet`, which allows for efficient look-up times. If a substring matches a pattern, I incremented `memo[i]` by `memo[j]`, where `j` is the start index of the substring. 
+<!---DAY10_END-->
 
-The function `parse_input` splits the input into available patterns and desired designs, allowing easy parsing from the given input format. I also included tests to validate my implementation against both example inputs and the final puzzle input, ensuring correctness while counting the number of valid designs. Overall, I effectively utilized dynamic programming and a hash set to simplify the solution and optimize performance.
-## [Day 20 - 🔒](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day20/mod.rs)
-- Part 1: 
-- Part 2: 
+<!---DAY11_BEGIN-->
+## [⭐️⭐️ Day 11 - Plutonian Pebbles](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day11/mod.rs)
 
+I approached the problem using a recursive strategy combined with memoization to efficiently compute the number of stones after a specified number of "blinks." To handle the rules that dictate how each stone transforms, I defined separate functions for each rule:
 
-## [Day 21 - 🔒](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day21/mod.rs)
-- Part 1: 
-- Part 2: 
+1. **Rule 1** handles the transformation of `0` to `1`.
+2. **Rule 2** deals with splitting a stone into two stones if its number has an even number of digits.
+3. **Rule 3** multiplies the stone's number by `2024` if none of the other rules apply.
 
+The `apply_rules` function organizes these rules, applying the first applicable one to the input stone. For blinks, I implemented a recursive function called `blink_recursive_count`, which takes the current list of stones and the number of blinks remaining. It uses a hashmap to store results of previously computed states to avoid redundant calculations, significantly improving efficiency.
 
-## [Day 22 - 🔒](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day22/mod.rs)
-- Part 1: 
-- Part 2: 
+The input is parsed into a vector of integers, representing the initial state of the stones. I then run simulations for the specified number of blinks, updating the stone collection according to the defined transformation rules. To verify the implementation, I wrote tests that check the output against known results from example cases and the puzzle input. This modular approach ensures that each component is easily testable and the main logic is clear.
 
 
-## [Day 23 - 🔒](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day23/mod.rs)
-- Part 1: 
-- Part 2: 
+<!---DAY11_END-->
 
+<!---DAY12_BEGIN-->
+## [⭐️⭐️ Day 12 - Garden Groups](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day12/mod.rs)
 
-## [Day 24 - 🔒](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day24/mod.rs)
-- Part 1: 
-- Part 2: 
+I approached the problem by first parsing the garden plot input into a grid structure. I then implemented a method to find all the distinct regions of connected plots of the same type by performing a depth-first search (DFS) starting from each unvisited plot. As I explored the grid, I kept track of the number of plots in each region and collected the edges that contributed to the perimeter.
 
+The edges were stored as a set to eliminate duplicates, allowing me to easily calculate the perimeter later. For the area of a region, I simply counted the number of visited plots during the DFS.
 
-## [Day 25 - 🔒](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day25/mod.rs)
-- Part 1: 
-- Part 2: 
+To compute the price of fencing required for each region, I created two separate functions. The first one multiplied the area of a region by the number of unique edges, representing the perimeter efficiently. The second function calculated the perimeter by considering the structural geometry of the edges, particularly focusing on the right angles made by adjacent edges.
 
-<!---END-->
+Finally, I validated my solution against provided test cases to ensure its correctness and efficiency, achieving both the total price calculation for the first part and a more geometrically accurate evaluation for the second part.
+
+
+<!---DAY12_END-->
+
+<!---DAY13_BEGIN-->
+## [⭐️⭐️ Day 13 - Claw Contraption](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day13/mod.rs)
+
+I used a structured approach to tackle the problem of determining the minimum number of tokens needed to win prizes from claw machines. First, I defined a `ClawMachine` struct to represent each machine's button movements and prize locations, extracting the necessary data using regular expressions for efficient parsing. This allowed me to create instances of `ClawMachine` from input strings.
+
+In the `solve` method, I established a system of linear equations to compute how many times to press each button (A and B) to precisely reach the prize's coordinates. By equating coefficients, I derived the necessary formulas to calculate the number of presses, ensuring to check the validity of the results, such as avoiding division by zero and ensuring that the results are integers.
+
+To find the total cost of token usage, I implemented a `cost` method that calculates the token expenditure based on the number of button presses derived from the `solve` function. By iterating through all claw machines, I summed the costs to derive the overall minimum tokens required.
+
+Finally, I validated my approach through unit tests, comparing the implementation against known example values and ensuring the accuracy of the parsing and calculations against the real puzzle input. This structured way of addressing the problem helped me efficiently tackle and solve it.
+
+
+<!---DAY13_END-->
+
+<!---DAY14_BEGIN-->
+## [⭐️⭐️ Day 14 - Restroom Redoubt](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day14/mod.rs)
+
+I began by defining two main structures, `Robot` and `Map`, to encapsulate the properties of the robots and the environment they inhabit. Each `Robot` contains its position and velocity represented by a 2D vector, while the `Map` holds a collection of robots and the dimensions of the grid.
+
+Next, I implemented the `step` method within the `Map` that updates the position of each robot based on its velocity. To account for edge wrapping, I used the modulo operator to ensure that if a robot moves beyond the grid boundaries, it reappears on the opposite side. This mimics the teleportation feature outlined in the puzzle.
+
+To simulate the movement over time, I created the `step_n_times` method, which calls the `step` method repeatedly for the specified number of iterations. After simulating for 100 seconds, I needed to determine the distribution of robots across four quadrants. To achieve this, I implemented the `count_quadrants` function, which updates a count for each quadrant based on the robots' final positions.
+
+The safety factor was computed by multiplying the number of robots in each quadrant, a task handled by the `safety_factor` method. Additionally, I created a grid representation of the map for visualization and included a heuristic to evaluate the regularity of the robots’ distribution through the `regularity_score` method.
+
+Finally, I used the `parse_input` function with a regular expression to read and parse the input data, creating `Robot` instances as required. The tests ensured correct calculations for both example and actual inputs, validating the implementation against the specified conditions in the puzzle description.
+
+
+<!---DAY14_END-->
+
+<!---DAY15_BEGIN-->
+## [⭐️⭐️ Day 15 - Warehouse Woes](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day15/mod.rs)
+
+I created a simulation of a warehouse where a robot moves around attempting to push boxes based on given instructions. I structured my code using a `Warehouse` struct that encapsulated a grid representing the warehouse and the position of the robot. The warehouse grid consists of different cell types, including walls, vacant spaces, and boxes, with a special representation for the robot itself.
+
+To handle the pushing of boxes, I implemented recursive functionality to gather all boxes that can be pushed in a certain direction. The robot checks its desired movement and, depending on the cell encountered, decides whether to simply move, push a box, or do nothing if blocked by a wall. For boxes, I correctly handled their dual representation (left and right halves) to ensure accurate positioning during movements.
+
+After simulating all movements, I calculated the GPS score by iterating through the grid and summing the coordinates of all box positions according to the specified formula. I also incorporated functionality to upscale the warehouse when necessary, effectively doubling its size and resizing the internal representation.
+
+In my tests, I verified the correctness of the simulation against both provided examples and my own inputs, ensuring that the expected outcomes matched actual results. This meticulous implementation ensured that the robot's movements were accurately represented, and the final GPS score of the boxes was computed correctly.
+
+
+<!---DAY15_END-->
+
+<!---DAY16_BEGIN-->
+## [👨‍💻👨‍💻 Day 16 - Reindeer Maze](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day16/mod.rs)
+
+
+
+
+<!---DAY16_END-->
+
+<!---DAY17_BEGIN-->
+## [👨‍💻👨‍💻 Day 17 - Chronospatial Computer](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day17/mod.rs)
+
+
+
+
+<!---DAY17_END-->
+
+<!---DAY18_BEGIN-->
+## [👨‍💻👨‍💻 Day 18 - RAM Run](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day18/mod.rs)
+
+
+
+
+<!---DAY18_END-->
+
+<!---DAY19_BEGIN-->
+## [⭐️⭐️ Day 19 - Linen Layout](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day19/mod.rs)
+
+I approached the puzzle using a dynamic programming technique to determine how many ways each design can be constructed using the available towel patterns. I defined the function `num_ways`, which takes a design string and a list of patterns, and it initializes a memoization vector to store the number of ways to construct substrings of the design.
+
+For each position in the design, I iterated backward through previous positions to check if the substring from those earlier positions to the current position matches any of the available patterns. If a match is found, I updated the memoization array by adding the count of ways to form the substring up to the earlier position.
+
+The `parse_input` function splits the input into rules and designs, allowing me to prepare the data for processing. In the tests, I used this logic to filter through the designs and count how many can be generated with the available patterns. By summing the valid pathways, I was able to solve the problem efficiently. 
+
+Overall, this method ensures that I check all possible combinations of patterns that fit into the designs while reusing computed results to optimize performance.
+
+
+<!---DAY19_END-->
+
+<!---DAY20_BEGIN-->
+
+<!---DAY20_END-->
+
+<!---DAY21_BEGIN-->
+
+<!---DAY21_END-->
+
+<!---DAY22_BEGIN-->
+
+<!---DAY22_END-->
+
+<!---DAY23_BEGIN-->
+
+<!---DAY23_END-->
+
+<!---DAY24_BEGIN-->
+
+<!---DAY24_END-->
+
+<!---DAY25_BEGIN-->
+
+<!---DAY25_END-->
