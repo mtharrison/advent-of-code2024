@@ -1,6 +1,10 @@
 <h1 align="center">🦀 Advent of Code 2024 🎄</h1>
 
-![build](https://github.com/mtharrison/advent-of-code2024/actions/workflows/rust.yml/badge.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+<div align="center">
+
+  <a href="">![build](https://github.com/mtharrison/advent-of-code2024/actions/workflows/rust.yml/badge.svg)</a>
+  <a href="">[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)</a>
+</div>
 
 
 
