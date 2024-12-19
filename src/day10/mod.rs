@@ -83,7 +83,7 @@ mod tests {
     }
 
     #[test]
-    fn test_part_1() {
+    fn test_part1() {
         let grid = util_parse::<Grid<char>>("day10", "puzzle.txt", Grid::from);
         let score = map_score(&grid, trailhead_score);
         assert_eq!(score, 430);

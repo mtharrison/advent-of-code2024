@@ -129,7 +129,7 @@ mod tests {
     }
 
     #[test]
-    fn test_part_1() {
+    fn test_part1() {
         let input = util_parse::<Grid<char>>("day12", "puzzle.txt", parse_input);
         let regions = find_regions(&input);
         let price = price_regions_by_edges(&regions);
