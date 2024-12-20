@@ -9,6 +9,10 @@
 
 My solutions to [AOC 2024](https://adventofcode.com/2024/about) in [The Rust Programming Language](https://www.rust-lang.org/).
 
+---
+
+> _The following info is [generated automatically](https://github.com/mtharrison/advent-of-code2024/tree/main/bin/readme)_
+
 <!---DAY1_BEGIN-->
 
 ### [⭐️⭐️ Day 1 - Historian Hysteria](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day01/mod.rs)
