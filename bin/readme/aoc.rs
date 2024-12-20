@@ -1,15 +1,11 @@
 use anyhow::{Error, Result};
 use reqwest;
 
-pub struct AOCClient {
-    client: reqwest::Client,
-}
+pub struct AOCClient {}
 
 impl AOCClient {
     pub fn new() -> Self {
-        Self {
-            client: reqwest::Client::new(),
-        }
+        Self {}
     }
 
     fn get_html_for_day(&self, day: usize) -> Result<String> {
