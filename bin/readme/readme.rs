@@ -22,7 +22,7 @@ impl Readme {
         .unwrap();
         let captures = re.captures(&self.readme).unwrap();
         let content = captures.name("content").unwrap().as_str();
-        !content.is_empty()
+        !content.trim().is_empty()
     }
 
     // worker thread reads from the channel and updates the README
