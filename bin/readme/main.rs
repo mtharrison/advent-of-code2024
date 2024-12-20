@@ -55,8 +55,7 @@ fn process_day(
         return;
     }
 
-    // let description = llm::get_day_description(aoc_client, day_id).unwrap_or_default();
-    let description = "...".to_string();
+    let description = llm::get_day_description(aoc_client, day_id).unwrap_or_default();
     let (part1, part2) =
         cargo::get_test_status(day_id).unwrap_or((TestStatus::Missing, TestStatus::Missing));
 
