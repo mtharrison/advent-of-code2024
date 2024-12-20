@@ -48,6 +48,8 @@ pub fn get_day_description(aoc_client: Arc<AOCClient>, day: usize) -> Result<Str
             For example when saying I used a <code>HashMap</code> to store
             the values, you should write I used a <code>HashMap</code> to
             store the values and not I used a `HashMap` to store the values.
+
+            REMEMBER: Never use backticks for code. Always use <code></code> tags.
             "
                 .to_string(),
             },
