@@ -44,6 +44,10 @@ pub fn get_day_description(aoc_client: Arc<AOCClient>, day: usize) -> Result<Str
             
             Be sure to wrap any code in <code></code> tags and not to use
             markdown backticks.
+
+            For example when saying I used a <code>HashMap</code> to store
+            the values, you should write I used a <code>HashMap</code> to
+            store the values and not I used a `HashMap` to store the values.
             "
                 .to_string(),
             },
