@@ -40,8 +40,12 @@ pub fn get_day_description(aoc_client: Arc<AOCClient>, day: usize) -> Result<Str
             and should focus on the choice of datastructures and algorithms
             that were used.
 
-            The parsing stage is not interesting and not to be mentioned."
-                    .to_string(),
+            The parsing stage is not interesting and not to be mentioned.
+            
+            Be sure to wrap any code in <code></code> tags and not to use
+            markdown backticks.
+            "
+                .to_string(),
             },
             Message {
                 role: Role::User,
