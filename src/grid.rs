@@ -6,6 +6,7 @@ pub enum Direction {
     Left,
 }
 
+#[derive(Debug)]
 pub struct Grid<T> {
     data: Vec<T>,
     width: usize,
@@ -44,6 +45,13 @@ impl<T> Grid<T> {
         if col < self.width && row < self.height() {
             self.data[row * self.width + col] = value;
         }
+    }
+
+    pub fn find(&self, value: &T) -> Option<(usize, usize)>
+    where
+        T: PartialEq,
+    {
+        self.data.iter().position(|x| x == value).map(|index| (index % self.width, index / self.width))
     }
 
     pub fn rows(&self) -> Vec<Vec<T>>
