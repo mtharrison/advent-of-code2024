@@ -80,7 +80,7 @@ fn main() {
 
     let aoc_client = Arc::new(aoc::AOCClient::new());
 
-    (move || {
+    {
         for i in 1..=25 {
             let day_exists = readme.day_exists(i);
             if day_exists && !force {
@@ -91,7 +91,7 @@ fn main() {
             let aoc_client = aoc_client.clone();
             thread::spawn(move || process_day(aoc_client, i, day_exists, tx));
         }
-    })();
+    };
 
     worker_handle.join().expect("readme worker thread panicked");
 

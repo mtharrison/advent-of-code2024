@@ -1,5 +1,4 @@
 use anyhow::{Error, Result};
-use reqwest;
 
 pub struct AOCClient {}
 
@@ -10,7 +9,7 @@ impl AOCClient {
 
     fn get_html_for_day(&self, day: usize) -> Result<String> {
         let result =
-            reqwest::blocking::get(&format!("https://adventofcode.com/2024/day/{}?/input", day))?;
+            reqwest::blocking::get(format!("https://adventofcode.com/2024/day/{}?/input", day))?;
 
         if result.status().as_u16() == 404 {
             return Err(Error::msg("404"));

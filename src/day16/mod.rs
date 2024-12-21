@@ -1,10 +1,7 @@
 use std::{
     cmp::Ordering,
     collections::{BinaryHeap, HashMap, HashSet},
-    i32,
 };
-
-use itertools::Position;
 
 use crate::{grid::Grid, vec2d::Vec2d};
 
@@ -76,7 +73,7 @@ impl Maze {
         };
 
         if self.grid.get(next_pos.x as usize, next_pos.y as usize) != Some(&'#') {
-            neighbours.push(((next_pos, dir.clone()), 1));
+            neighbours.push(((next_pos, *dir), 1));
         }
 
         // turn clockwise
@@ -114,7 +111,7 @@ impl Maze {
         };
 
         if self.grid.get(next_pos.x as usize, next_pos.y as usize) != Some(&'#') {
-            neighbours.push(((next_pos, dir.clone()), 1));
+            neighbours.push(((next_pos, *dir), 1));
         }
 
         // turn clockwise
