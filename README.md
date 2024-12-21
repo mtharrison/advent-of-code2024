@@ -16,7 +16,7 @@ My solutions to [AOC 2024](https://adventofcode.com/2024/about) in [The Rust Pro
 <!---DAY1_BEGIN-->
 
 ### [⭐️⭐️ Day 1 - Historian Hysteria](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day01/mod.rs)
-            
+
 <details>
 <summary>See explanation</summary>
 <br/>
@@ -28,7 +28,7 @@ To solve the puzzle, I employed the use of two <code>Vec<i32></code> to efficien
 <!---DAY2_BEGIN-->
 
 ### [⭐️⭐️ Day 2 - Red-Nosed Reports](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day02/mod.rs)
-            
+
 <details>
 <summary>See explanation</summary>
 <br/>
@@ -40,7 +40,7 @@ In my solution, I utilized a recursive approach to validate the safety of the re
 <!---DAY3_BEGIN-->
 
 ### [⭐️⭐️ Day 3 - Mull It Over](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day03/mod.rs)
-            
+
 <details>
 <summary>See explanation</summary>
 <br/>
@@ -52,7 +52,7 @@ I used a <code>Regex</code> to identify valid <code>mul</code> instructions with
 <!---DAY4_BEGIN-->
 
 ### [⭐️⭐️ Day 4 - Ceres Search](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day04/mod.rs)
-            
+
 <details>
 <summary>See explanation</summary>
 <br/>
@@ -64,7 +64,7 @@ I used a custom <code>Grid</code> data structure to represent the letter grid, w
 <!---DAY5_BEGIN-->
 
 ### [⭐️⭐️ Day 5 - Print Queue](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day05/mod.rs)
-            
+
 <details>
 <summary>See explanation</summary>
 <br/>
@@ -76,7 +76,7 @@ I employed a tuple-based representation using the type <code>Edge</code> to enca
 <!---DAY6_BEGIN-->
 
 ### [⭐️⭐️ Day 6 - Guard Gallivant](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day06/mod.rs)
-            
+
 <details>
 <summary>See explanation</summary>
 <br/>
@@ -88,7 +88,7 @@ I designed the solution by modeling the world as a grid using a <code>Vec<Vec<Ce
 <!---DAY7_BEGIN-->
 
 ### [⭐️⭐️ Day 7 - Bridge Repair](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day07/mod.rs)
-            
+
 <details>
 <summary>See explanation</summary>
 <br/>
@@ -100,7 +100,7 @@ I used a combination of parallel processing and combinatorial generation to eval
 <!---DAY8_BEGIN-->
 
 ### [⭐️⭐️ Day 8 - Resonant Collinearity](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day08/mod.rs)
-            
+
 <details>
 <summary>See explanation</summary>
 <br/>
@@ -112,7 +112,7 @@ I utilized a combination of the <code>Vec</code> and <code>Vec2d</code> data str
 <!---DAY9_BEGIN-->
 
 ### [⭐️⭐️ Day 9 - Disk Fragmenter](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day09/mod.rs)
-            
+
 <details>
 <summary>See explanation</summary>
 <br/>
@@ -124,7 +124,7 @@ I utilized a combination of custom data structures to represent the disk state e
 <!---DAY10_BEGIN-->
 
 ### [⭐️⭐️ Day 10 - Hoof It](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day10/mod.rs)
-            
+
 <details>
 <summary>See explanation</summary>
 <br/>
@@ -136,7 +136,7 @@ I utilized a recursive depth-first search approach to explore the hiking trails 
 <!---DAY11_BEGIN-->
 
 ### [⭐️⭐️ Day 11 - Plutonian Pebbles](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day11/mod.rs)
-            
+
 <details>
 <summary>See explanation</summary>
 <br/>
@@ -148,7 +148,7 @@ I structured my solution using a series of functions to apply the transformation
 <!---DAY12_BEGIN-->
 
 ### [⭐️⭐️ Day 12 - Garden Groups](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day12/mod.rs)
-            
+
 <details>
 <summary>See explanation</summary>
 <br/>
@@ -160,7 +160,7 @@ I used a depth-first search algorithm to identify and traverse regions of garden
 <!---DAY13_BEGIN-->
 
 ### [⭐️⭐️ Day 13 - Claw Contraption](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day13/mod.rs)
-            
+
 <details>
 <summary>See explanation</summary>
 <br/>
@@ -172,7 +172,7 @@ I designed a <code>ClawMachine</code> struct to encapsulate the button behaviors
 <!---DAY14_BEGIN-->
 
 ### [⭐️⭐️ Day 14 - Restroom Redoubt](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day14/mod.rs)
-            
+
 <details>
 <summary>See explanation</summary>
 <br/>
@@ -184,7 +184,7 @@ I used a <code>Vec</code> to store the collection of <code>Robot</code> instance
 <!---DAY15_BEGIN-->
 
 ### [⭐️⭐️ Day 15 - Warehouse Woes](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day15/mod.rs)
-            
+
 <details>
 <summary>See explanation</summary>
 <br/>
@@ -195,12 +195,12 @@ I utilized a custom <code>Grid</code> structure to represent the warehouse, wher
 
 <!---DAY16_BEGIN-->
 
-### [👨‍💻👨‍💻 Day 16 - Reindeer Maze](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day16/mod.rs)
-            
+### [⭐️⭐️ Day 16 - Reindeer Maze](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day16/mod.rs)
+
 <details>
 <summary>See explanation</summary>
 <br/>
-
+To solve the puzzle, I implemented Dijkstra's algorithm to find the shortest path through the maze while considering the specific scoring rules for moving and turning. I utilized a <code>BinaryHeap</code> as a priority queue to efficiently manage the unvisited nodes based on the current score, and a <code>HashMap</code> to store the minimum distances to each state, which consists of a position and direction. By defining a <code>neighbours</code> method, I generated possible states from the current position by moving forward and turning, while taking care to handle walls correctly. After calculating the distances, I backtracked from the target to identify and count all the optimal path tiles.
 </details>
             
 <!---DAY16_END-->
@@ -208,7 +208,7 @@ I utilized a custom <code>Grid</code> structure to represent the warehouse, wher
 <!---DAY17_BEGIN-->
 
 ### [👨‍💻👨‍💻 Day 17 - Chronospatial Computer](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day17/mod.rs)
-            
+
 <details>
 <summary>See explanation</summary>
 <br/>
@@ -220,7 +220,7 @@ I utilized a custom <code>Grid</code> structure to represent the warehouse, wher
 <!---DAY18_BEGIN-->
 
 ### [👨‍💻👨‍💻 Day 18 - RAM Run](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day18/mod.rs)
-            
+
 <details>
 <summary>See explanation</summary>
 <br/>
@@ -232,7 +232,7 @@ I utilized a custom <code>Grid</code> structure to represent the warehouse, wher
 <!---DAY19_BEGIN-->
 
 ### [⭐️⭐️ Day 19 - Linen Layout](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day19/mod.rs)
-            
+
 <details>
 <summary>See explanation</summary>
 <br/>
@@ -244,7 +244,7 @@ I utilized dynamic programming to solve the problem of determining how many desi
 <!---DAY20_BEGIN-->
 
 ### [👨‍💻👨‍💻 Day 20 - Race Condition](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day20/mod.rs)
-            
+
 <details>
 <summary>See explanation</summary>
 <br/>
@@ -255,6 +255,14 @@ I utilized dynamic programming to solve the problem of determining how many desi
 
 <!---DAY21_BEGIN-->
 
+### [👨‍💻👨‍💻 Day 21 - Keypad Conundrum](https://github.com/mtharrison/advent-of-code2024/blob/main/src/day21/mod.rs)
+
+<details>
+<summary>See explanation</summary>
+<br/>
+
+</details>
+            
 <!---DAY21_END-->
 
 <!---DAY22_BEGIN-->
